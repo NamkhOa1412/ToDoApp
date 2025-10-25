@@ -10,26 +10,22 @@ class AuthProvider extends ChangeNotifier {
   User? get user => _user;
   bool get isLoggedIn => _accessToken != null;
 
-  // Login và lưu token
   Future<void> login(String email, String password) async {
     try {
-      // SupabaseAPI.login đã trả về User trực tiếp
       final userData = await SupabaseAPI.login(email, password);
       _user = userData;
       _accessToken = userData.accessToken;
 
-      // Lưu token vào SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('access_token', _accessToken!);
 
       notifyListeners();
     } catch (e) {
       print('Login error: $e');
-      rethrow; // Có thể throw lên để UI xử lý lỗi
+      rethrow;
     }
   }
 
-  // Load session từ SharedPreferences
   Future<void> loadSession() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
@@ -38,7 +34,6 @@ class AuthProvider extends ChangeNotifier {
       _accessToken = token;
 
       try {
-        // SupabaseAPI.getUser trả về User trực tiếp
         final userData = await SupabaseAPI.getUser(token);
         _user = userData;
         notifyListeners();
@@ -50,7 +45,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // Logout
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('access_token');

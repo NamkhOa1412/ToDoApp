@@ -13,7 +13,6 @@ class SupabaseAPI {
     'Content-Type': 'application/json',
   };
 
-  // Login trả về User
   static Future<User> login(String email, String password) async {
     final url = Uri.parse('$baseUrl/auth/v1/token?grant_type=password');
     final body = jsonEncode({
