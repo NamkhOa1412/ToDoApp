@@ -43,6 +43,32 @@ class SupabaseAPI {
     }
   }
 
+  static Future<bool> signup(String email, String username, String password) async {
+    final url = Uri.parse('$baseUrl/auth/v1/signup');
+    final body = jsonEncode({
+      "email": email,
+      "password": password,
+      "data": {
+        "username": username,
+      },
+    });
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+
+        return true;
+      } else {
+        print("Đăng ký thất bại: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      print("Lỗi khi đăng ký: $e");
+      return false;
+    }
+  }
+
   // Lấy thông tin người dùng
   static Future<User> getUser(String accessToken) async {
     final url = Uri.parse('$baseUrl/auth/v1/user');

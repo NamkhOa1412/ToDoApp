@@ -107,10 +107,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                         GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (_) => const SignupScreen()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const SignupScreen()),
+                            );
                           },
                           child: Text('Đăng ký tài khoản', style: TextStyle( fontSize: 13, color: Colors.blue),)
                         )

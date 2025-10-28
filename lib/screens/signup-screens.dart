@@ -18,6 +18,33 @@ class _SignupScreenState extends State<SignupScreen> {
   final passCtrl = TextEditingController();
   final confirmpassCtrl = TextEditingController();
 
+  void signup() async {
+    if (emailCtrl.text == '' || passCtrl.text == '' || confirmpassCtrl.text == '' || usernameCtrl.text == '')
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Đăng ký thất bại: Vui lòng nhập đầy đủ thông tin!"), backgroundColor: Colors.red,),
+      );
+      return;
+    } else if (passCtrl.text.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Đăng ký thất bại: Mật khẩu tối thiểu là 6 kí tự!"), backgroundColor: Colors.red,),
+      );
+      return;
+    } else if (passCtrl.text != confirmpassCtrl.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Đăng ký thất bại: Vui lòng kiểm tra lại mật khẩu!"), backgroundColor: Colors.red,),
+      );
+      return;
+    } else {
+      final auth = Provider.of<AuthProvider>(context, listen: false);
+      try {
+        await auth.signup(emailCtrl.text.trim(), usernameCtrl.text.trim(), passCtrl.text.trim(), context);
+      } catch (e) {
+        print("lỗi $e");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +109,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       const SizedBox(height: 10),
 
-                      CustomInputField(hintText: 'Tên người dùng', controller: usernameCtrl, obscureText: true,),
+                      CustomInputField(hintText: 'Tên người dùng', controller: usernameCtrl,),
 
                       const SizedBox(height: 20),
 
@@ -104,7 +131,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       const SizedBox(height: 10),
 
-                      CustomInputField(hintText: 'Xác nhận Password', controller: passCtrl, obscureText: true,),
+                      CustomInputField(hintText: 'Xác nhận Password', controller: confirmpassCtrl, obscureText: true,),
 
                       const Spacer(),
 
@@ -112,7 +139,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         padding: const EdgeInsets.only(bottom: 20, top: 30),
                         child: SizedBox(
                           height: 50,
-                          child: CustomButton(text: 'Đăng ký', onPressed: () {}),
+                          child: CustomButton(text: 'Đăng ký', onPressed: signup),
                         ),
                       ),
                     ],

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Supabase Auth REST',
+      title: 'KToDo',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const SplashScreen(),
     );
