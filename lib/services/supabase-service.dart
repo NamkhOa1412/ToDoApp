@@ -106,4 +106,27 @@ class SupabaseAPI {
       throw Exception("Không thể lấy thông tin người dùng");
     }
   }
+
+  static Future<bool> changePassword(String accessToken, String newPassword) async {
+    final url = Uri.parse('$baseUrl/auth/v1/user');
+    final body = jsonEncode({
+      "password": newPassword
+    });
+    try {
+      final response = await http.put(url, headers: {
+        ...headers,
+        'Authorization': 'Bearer $accessToken',
+      }, body: body);
+      if (response.statusCode == 200) {
+        print('object');
+        return true;
+      }
+      else {
+        print(12312321124);
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

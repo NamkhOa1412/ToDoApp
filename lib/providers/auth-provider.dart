@@ -62,6 +62,25 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> changePassword(String newPassword) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token != null && token.isNotEmpty) {
+      _accessToken = token;
+
+      try {
+        await SupabaseAPI.changePassword(token, newPassword);
+        // _user = userData;
+        // notifyListeners();
+      } catch (e) {
+        print('Load session error: $e');
+        _user = null;
+        _accessToken = null;
+      }
+    }
+  }
+
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('access_token');

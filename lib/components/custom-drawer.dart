@@ -3,6 +3,7 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/info-user.dart';
 import 'package:ktodo_application/providers/user-provider.dart';
+import 'package:ktodo_application/screens/changepass-screens.dart';
 import 'package:ktodo_application/screens/help.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth-provider.dart';
@@ -67,6 +68,10 @@ class AppDrawer extends StatelessWidget {
                 leading: const Icon(Icons.lock),
                 title: const Text('Đổi mật khẩu'),
                 onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ChangePassScreens()),
+                  );
                   controller.hideDrawer();
                 },
               ),
