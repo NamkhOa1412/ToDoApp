@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/providers/user-provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth-provider.dart';
 import 'screens/splash-screens.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
       child: const MyApp(),
     ),
+
   );
 }
 

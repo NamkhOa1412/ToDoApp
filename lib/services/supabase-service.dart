@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:ktodo_application/model/info-user.dart';
 
 import '../model/user.dart';
 
@@ -69,7 +70,6 @@ class SupabaseAPI {
     }
   }
 
-  // Lấy thông tin người dùng
   static Future<User> getUser(String accessToken) async {
     final url = Uri.parse('$baseUrl/auth/v1/user');
     final response = await http.get(url, headers: {
@@ -81,6 +81,24 @@ class SupabaseAPI {
       final data = jsonDecode(response.body);
       if (data != null && data is Map<String, dynamic>) {
         return User.fromJson(data);
+      } else {
+        throw Exception("Dữ liệu người dùng không hợp lệ");
+      }
+    } else {
+      throw Exception("Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<infoUser> getInfoUser(String accessToken, String idUser) async {
+    final url = Uri.parse('$baseUrl/rest/v1/profiles?id=eq.$idUser');
+    final response = await http.get(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    });
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data != null && data is List && data.isNotEmpty) {
+        return infoUser.fromJson(data[0]);
       } else {
         throw Exception("Dữ liệu người dùng không hợp lệ");
       }
