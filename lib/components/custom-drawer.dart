@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/info-user.dart';
 import 'package:ktodo_application/providers/user-provider.dart';
+import 'package:ktodo_application/screens/help.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth-provider.dart';
 import '../screens/login-screens.dart';
@@ -16,7 +18,6 @@ class AppDrawer extends StatelessWidget {
     final auth = Provider.of<AuthProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
-    print(user);
 
     return SafeArea(
       child: Container(
@@ -69,16 +70,29 @@ class AppDrawer extends StatelessWidget {
                   controller.hideDrawer();
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.help),
+                title: const Text('Liên hệ hỗ trợ'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const HelpScreens()),
+                  );
+                  controller.hideDrawer();
+                },
+              ),
               const Spacer(),
               ListTile(
                 leading: const Icon(Icons.logout),
                 title: const Text('Đăng xuất'),
                 onTap: () {
-                  auth.logout();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
-                  );
+                  ConfirmLogoutDialog.show(context: context, title: 'Xác nhận đăng xuất', message: 'Bạn có muốn đăng xuất tài khoản ra khỏi thiết bị!', onPressed: () {
+                    auth.logout();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
+                  });
                 },
               ),
             ],

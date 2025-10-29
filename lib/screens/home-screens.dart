@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Xin chào ${auth.user?.email ?? ''}"),
+          title: Text("Home"),
           leading: IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () { _toggleDrawer(auth.user!.id!); },
