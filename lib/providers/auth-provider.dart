@@ -27,14 +27,13 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> signup(String email, String username, String password, BuildContext context) async {
+  Future<void> signup(String email, String username, String password, String fullname, BuildContext context) async {
     try {
-      final is_auth = await SupabaseAPI.signup(email, username, password);
-      print(is_auth);
-      if (is_auth == true) {
-        CustomDialog.show(context: context, title: 'Đăng ký thành công', message: 'Đăng ký thành công vui lòng kiểm tra email của bạn để xác nhận!', type: DialogType.success);
+      final is_auth = await SupabaseAPI.signup(email, username, password, fullname);
+      if (is_auth == null) {
+        CustomDialog.show(context: context, title: 'Đăng ký thành công', message: 'Đăng ký thành công vui lòng kiểm tra email của bạn để xác nhận sau đó Đăng nhập lại!', type: DialogType.success);
       } else {
-        CustomDialog.show(context: context, title: 'Đăng ký thất bại', message: 'Vui lòng kiểm tra lại thông tin đăng ký!', type: DialogType.error);
+        CustomDialog.show(context: context, title: 'Đăng ký thất bại', message: is_auth, type: DialogType.error);
       }
       notifyListeners();
     } catch (e) {
@@ -62,7 +61,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> changePassword(String newPassword) async {
+  Future<void> changePassword(String newPassword, BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
 
@@ -70,9 +69,13 @@ class AuthProvider extends ChangeNotifier {
       _accessToken = token;
 
       try {
-        await SupabaseAPI.changePassword(token, newPassword);
-        // _user = userData;
-        // notifyListeners();
+        final msg = await SupabaseAPI.changePassword(token, newPassword);
+        if (msg != null) {
+          CustomDialog.show(context: context, title: 'Đổi thất bại', message: msg, type: DialogType.error);
+        } else {
+          CustomDialog.show(context: context, title: 'Đổi thành công', message: "Bạn có thể sử dụng mật khẩu mới ngay bây giờ", type: DialogType.success);
+        }
+        notifyListeners();
       } catch (e) {
         print('Load session error: $e');
         _user = null;

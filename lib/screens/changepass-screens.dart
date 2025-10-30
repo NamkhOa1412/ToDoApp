@@ -11,7 +11,7 @@ class ChangePassScreens extends StatelessWidget {
   void changePassword(BuildContext context) async {
     final auth = Provider.of<AuthProvider>(context, listen: false);
     try {
-      await auth.changePassword(newPassCtrl.text.trim());
+      await auth.changePassword(newPassCtrl.text.trim(), context);
     } catch (e) {
       print("lỗi $e");
     }

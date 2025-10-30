@@ -21,4 +21,16 @@ class UserProvider extends ChangeNotifier {
       print('loi getinfoUser: $e');
     }
   }
+
+  Future<bool?> checkUsername(String username) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    try {
+      final dataUser = await SupabaseAPI.checkUsername(username);
+      return dataUser;
+    }
+    catch (e) {
+      print('loi getinfoUser: $e');
+    }
+  }
 }

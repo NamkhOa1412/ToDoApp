@@ -7,10 +7,9 @@ class CustomDialog {
     required BuildContext context,
     required String title,
     required String message,
-    String buttonText = 'Okay',
+    String buttonText = 'Ok',
     DialogType type = DialogType.info,
   }) {
-    // Xác định icon và màu theo type
     IconData iconData;
     Color color;
 
@@ -34,7 +33,6 @@ class CustomDialog {
         break;
     }
 
-    // Hiển thị dialog
     showDialog(
       context: context,
       builder: (context) {

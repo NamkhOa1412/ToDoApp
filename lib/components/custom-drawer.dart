@@ -49,7 +49,7 @@ class AppDrawer extends StatelessWidget {
                     )
                   : const Icon(Icons.person, size: 60, color: Colors.white),
               ),
-              Text(user!.fullName ?? '', style: TextStyle(color: Colors.white, fontSize: 16),),
+              Text(user!.fullName ?? '', style: TextStyle(color: Color(0xFF26A69A), fontSize: 16, fontWeight: FontWeight.bold),),
               ListTile(
                 leading: const Icon(Icons.home),
                 title: const Text('Trang chủ'),

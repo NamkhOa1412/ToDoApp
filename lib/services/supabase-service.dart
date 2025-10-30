@@ -44,7 +44,7 @@ class SupabaseAPI {
     }
   }
 
-  static Future<bool> signup(String email, String username, String password) async {
+  static Future<String?> signup(String email, String username, String password, String fullname) async {
     final url = Uri.parse('$baseUrl/auth/v1/signup');
     final body = jsonEncode({
       "email": email,
@@ -55,18 +55,56 @@ class SupabaseAPI {
     });
     try {
       final response = await http.post(url, headers: headers, body: body);
-
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-
-        return true;
+        final userId = data['id'];
+        final isCreate = await createProfile(userId: userId, username: username, fullName: fullname);
+        if ( isCreate == null ) {
+          return null;
+        } else {
+          print(isCreate);
+          return isCreate;
+        }
       } else {
         print("Đăng ký thất bại: ${response.body}");
-        return false;
+        final data = jsonDecode(response.body);
+        final msg = data['msg'] ?? 'Lỗi không xác định';
+        return msg;
       }
     } catch (e) {
       print("Lỗi khi đăng ký: $e");
-      return false;
+      return e.toString();
+    }
+  }
+  // tạo profile tự động cho User mới
+  static Future<String?> createProfile({
+    required String userId,
+    required String username,
+    required String fullName,
+  }) async {
+    final url = Uri.parse('$baseUrl/rest/v1/profiles');
+    final headers = {
+      'Content-Type': 'application/json',
+      'apikey': anonKey,
+      'Authorization': 'Bearer $anonKey',
+    };
+
+    final body = jsonEncode({
+      'id': userId,
+      'username': username,
+      'full_name': fullName,
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 201) {
+      print('Đã tạo profile cho userId: $userId');
+      return null;
+    } else {
+      print('Lỗi tạo profile: ${response.body}');
+      final data = jsonDecode(response.body);
+      final msg = data['message'] ?? 'Lỗi không xác định';
+      return msg;
     }
   }
 
@@ -107,7 +145,7 @@ class SupabaseAPI {
     }
   }
 
-  static Future<bool> changePassword(String accessToken, String newPassword) async {
+  static Future<String?> changePassword(String accessToken, String newPassword) async {
     final url = Uri.parse('$baseUrl/auth/v1/user');
     final body = jsonEncode({
       "password": newPassword
@@ -118,14 +156,29 @@ class SupabaseAPI {
         'Authorization': 'Bearer $accessToken',
       }, body: body);
       if (response.statusCode == 200) {
-        print('object');
-        return true;
+        return null;
       }
       else {
-        print(12312321124);
-        return false;
+        final data = jsonDecode(response.body);
+        final msg = data['msg'] ?? 'Lỗi không xác định';
+        return msg;
       }
     } catch (e) {
+      return e.toString();
+    }
+  }
+
+  static Future<bool> checkUsername( String username) async {
+    final url = Uri.parse('$baseUrl/rest/v1/profiles?username=eq.$username');
+    final response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data is List && data.isEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
       return false;
     }
   }
