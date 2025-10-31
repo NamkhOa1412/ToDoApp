@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/providers/user-provider.dart';
+import 'package:ktodo_application/screens/card/newtask-card.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import '../providers/auth-provider.dart';
@@ -52,7 +53,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: const Center(child: Text("Đăng nhập thành công!")),
+        // body: const Center(child: Text("Đăng nhập thành công!")),
+        body: Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    const SizedBox(height: 20),
+    AddTaskCard(
+      onTap: () {
+        print("Tapped to add task");
+        // Navigator.push(...); // Điều hướng sang trang tạo task nếu cần
+      },
+    ),
+    const SizedBox(height: 10),
+    const Center(child: Text("Đăng nhập thành công!")),
+  ],
+),
       ),
       drawer: AppDrawer(controller: _advancedDrawerController,),
     );
