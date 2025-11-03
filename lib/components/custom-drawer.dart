@@ -57,13 +57,13 @@ class AppDrawer extends StatelessWidget {
                   controller.hideDrawer();
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.person),
-                title: const Text('Thông tin cá nhân'),
-                onTap: () {
-                  controller.hideDrawer();
-                },
-              ),
+              // ListTile(
+              //   leading: const Icon(Icons.person),
+              //   title: const Text('Thông tin cá nhân'),
+              //   onTap: () {
+              //     controller.hideDrawer();
+              //   },
+              // ),
               ListTile(
                 leading: const Icon(Icons.lock),
                 title: const Text('Đổi mật khẩu'),

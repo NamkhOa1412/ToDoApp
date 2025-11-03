@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth-provider.dart';
 import 'home-screens.dart';
@@ -22,10 +23,12 @@ class _SplashScreenState extends State<SplashScreen> {
     final auth = Provider.of<AuthProvider>(context, listen: false);
     await auth.loadSession();
 
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
-    if (auth.isLoggedIn) {
+    if (auth.isLoggedIn) { 
+      final board = Provider.of<BoardProvider>(context, listen: false);
+      board.getBoards();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => const HomeScreen()));
     } else {

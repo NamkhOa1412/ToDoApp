@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/providers/user-provider.dart';
+import 'package:ktodo_application/screens/card/list-task.dart';
 import 'package:ktodo_application/screens/card/newtask-card.dart';
+import 'package:ktodo_application/screens/card/task-card.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import '../providers/auth-provider.dart';
@@ -26,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
-
     return AdvancedDrawer(
       controller: _advancedDrawerController,
       animationDuration: Duration(milliseconds: 300),
@@ -53,7 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        // body: const Center(child: Text("Đăng nhập thành công!")),
         body: Column(
   crossAxisAlignment: CrossAxisAlignment.start,
   children: [
@@ -61,13 +62,18 @@ class _HomeScreenState extends State<HomeScreen> {
     AddTaskCard(
       onTap: () {
         print("Tapped to add task");
-        // Navigator.push(...); // Điều hướng sang trang tạo task nếu cần
       },
     ),
     const SizedBox(height: 10),
-    const Center(child: Text("Đăng nhập thành công!")),
+    Expanded(
+  child: RefreshIndicator(
+    onRefresh: () => context.read<BoardProvider>().getBoards(),
+    child: ListTask(),
+  ),
+)
   ],
 ),
+
       ),
       drawer: AppDrawer(controller: _advancedDrawerController,),
     );

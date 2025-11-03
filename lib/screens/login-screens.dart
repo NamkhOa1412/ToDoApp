@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/button-custom.dart';
 import 'package:ktodo_application/components/input-custom.dart';
+import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/screens/signup-screens.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth-provider.dart';
@@ -34,6 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
+      final board = Provider.of<BoardProvider>(context, listen: false);
+      board.getBoards();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Đăng nhập thành công"), backgroundColor: Colors.green,),
       );

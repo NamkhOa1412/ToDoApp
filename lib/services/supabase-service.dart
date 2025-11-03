@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/model/info-user.dart';
 
 import '../model/user.dart';
@@ -180,6 +181,23 @@ class SupabaseAPI {
       }
     } else {
       return false;
+    }
+  }
+
+  static Future<List<Boards>> getBoard(String accessToken) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/get_user_boards');
+    final response = await http.get(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    });
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      final boards = (decode as List)
+        .map((e) => Boards.fromJson(e))
+        .toList();
+      return boards;
+    } else {
+      throw Exception("Không thể lấy thông tin người dùng");
     }
   }
 }
