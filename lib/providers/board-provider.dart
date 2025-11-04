@@ -37,7 +37,6 @@ class BoardProvider extends ChangeNotifier {
   }
 
   Future<void> getBoards() async {
-    print(12453621543126753);
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ktodo_application/model/board.dart';
+import 'package:ktodo_application/utils/string-utils.dart';
 
 class TaskCard extends StatelessWidget {
   final Boards boards;
@@ -62,21 +64,6 @@ class TaskCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(
-                      child: Text(
-                        boards.description.toString(),
-                        maxLines: 2,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 13),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-
-                // Row info
-                Row(
-                  children: [
                     Icon(Icons.comment, size: 16),
                     const SizedBox(width: 4),
                     // Text("$comments", style: const TextStyle(fontSize: 13)),
@@ -87,11 +74,11 @@ class TaskCard extends StatelessWidget {
                     Text(boards.memberCount.toString(), style: const TextStyle(fontSize: 13)),
 
                     const Spacer(),
-                    // Text(
-                    //   date,
-                    //   style: const TextStyle(
-                    //       fontSize: 12, color: Colors.grey),
-                    // )
+                    Text(
+                      boards.updatedAt == '' ? '' : StringUtils.formatDateToString(DateFormat("yyyy-MM-ddTHH:mm:ss").parse(boards.updatedAt.toString())),
+                      style: const TextStyle(
+                          fontSize: 12, color: Colors.grey),
+                    )
                   ],
                 )
               ],

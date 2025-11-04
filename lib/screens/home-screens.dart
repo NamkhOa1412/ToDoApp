@@ -56,24 +56,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    const SizedBox(height: 20),
-    AddTaskCard(
-      onTap: () {
-        print("Tapped to add task");
-      },
-    ),
-    const SizedBox(height: 10),
-    Expanded(
-  child: RefreshIndicator(
-    onRefresh: () => context.read<BoardProvider>().getBoards(),
-    child: ListTask(),
-  ),
-)
-  ],
-),
-
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            AddTaskCard(
+              onTap: () {
+                print("Tapped to add task");
+              },
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () => context.read<BoardProvider>().getBoards(),
+                child: ListTask(),
+              ),
+            )
+          ],
+        ),
       ),
       drawer: AppDrawer(controller: _advancedDrawerController,),
     );
