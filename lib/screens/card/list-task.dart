@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/screens/card/task-card.dart';
@@ -10,6 +11,7 @@ class ListTask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final boardProvider = Provider.of<BoardProvider>(context);
     final boards = context.watch<BoardProvider>().listBoards;
 
     if (boards.isEmpty) {
@@ -27,7 +29,22 @@ class ListTask extends StatelessWidget {
               MaterialPageRoute(builder: (_) => TaskInfo(boards: board,)),
             );
           },
-          child: TaskCard(boards: board)
+          onLongPress: () {
+            if (board.role != 'owner') {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Bạn không có quyền xóa bảng này!"), backgroundColor: Colors.red,),
+              );
+            }
+            else {
+              ConfirmLogoutDialog.show(context: context, title: 'Xác nhận xóa', message: 'Bạn có muốn xóa bảng!', onPressed: () {
+                boardProvider.deleteBoard(board.id.toString(), context);
+              });
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: TaskCard(boards: board),
+          )
         );
       },
     );

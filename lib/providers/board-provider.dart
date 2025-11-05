@@ -49,7 +49,7 @@ class BoardProvider extends ChangeNotifier {
   }
 
   void startAutoRefresh() {
-    _timer = Timer.periodic(const Duration(seconds: 15), (_) {
+    _timer = Timer.periodic(const Duration(seconds: 10), (_) {
       getBoards();
     });
   }
@@ -58,5 +58,30 @@ class BoardProvider extends ChangeNotifier {
   void dispose() {
     _timer?.cancel();
     super.dispose();
+  }
+
+  // api
+  Future<void> addBoard(String title, String des, BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      await SupabaseAPI.addBoard(token!, title, des , context);
+      getBoards();
+    } catch (e) {
+      print("loi: $e");
+    }
+  }
+
+  Future<void> deleteBoard(String board_id, BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      await SupabaseAPI.deleteBoard(token!, board_id, context);
+      getBoards();
+    } catch (e) {
+      print("loi: $e");
+    }
   }
 }

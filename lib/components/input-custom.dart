@@ -6,6 +6,8 @@ class CustomInputField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool obscureText;
   final IconData? prefixIcon;
+  final int minLines;
+  final int maxLines;
 
   const CustomInputField({
     Key? key,
@@ -14,6 +16,8 @@ class CustomInputField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.prefixIcon,
+    this.minLines = 1,
+    this.maxLines = 1,
   }) : super(key: key);
 
   @override
@@ -22,6 +26,8 @@ class CustomInputField extends StatelessWidget {
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
+      minLines: minLines,
+      maxLines: maxLines,
       style: const TextStyle(fontSize: 16, color: Colors.black87),
       decoration: InputDecoration(
         hintText: hintText,

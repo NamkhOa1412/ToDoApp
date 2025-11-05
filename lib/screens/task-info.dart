@@ -43,7 +43,7 @@ class _TaskInfoState extends State<TaskInfo> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                widget.boards.description.toString(),
+                                widget.boards.title.toString(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(

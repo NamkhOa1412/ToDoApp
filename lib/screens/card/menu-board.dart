@@ -38,7 +38,7 @@ class _MenuBoardState extends State<MenuBoard> {
                             ),
                           ),
                           Expanded(
-                            flex: 8,
+                            flex: 9,
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
@@ -52,16 +52,8 @@ class _MenuBoardState extends State<MenuBoard> {
                               ),
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: IconButton(
-                                icon: Icon(Icons.more_horiz_rounded, color: Colors.black),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                            ),
-                          ),
+
+                          Column()
                         ],
                       ),
                     ],

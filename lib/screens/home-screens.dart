@@ -4,6 +4,7 @@ import 'package:ktodo_application/providers/user-provider.dart';
 import 'package:ktodo_application/screens/card/list-task.dart';
 import 'package:ktodo_application/screens/card/newtask-card.dart';
 import 'package:ktodo_application/screens/card/task-card.dart';
+import 'package:ktodo_application/screens/task-screen/add-new-task-screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import '../providers/auth-provider.dart';
@@ -61,7 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20),
             AddTaskCard(
               onTap: () {
-                print("Tapped to add task");
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => AddNewTaskScreen()),
+                );
               },
             ),
             const SizedBox(height: 10),

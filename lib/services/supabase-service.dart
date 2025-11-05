@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/model/info-user.dart';
 
@@ -196,6 +198,58 @@ class SupabaseAPI {
         .map((e) => Boards.fromJson(e))
         .toList();
       return boards;
+    } else {
+      throw Exception("Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<void> addBoard(String accessToken, String title, String des, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/add_board');
+    final body = jsonEncode({
+      "title": title,
+      "description": des,
+      "is_private" : true
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    print(response.body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      // print(decode[])
+      if ( decode[0]['status'] == true ) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Tạo bảng thành công!"), backgroundColor: Colors.green,),
+        );
+        Navigator.pop(context);
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
+      }
+    } else {
+      throw Exception("Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<void> deleteBoard(String accessToken, String board_id, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/delete_board');
+    final body = jsonEncode({
+      "board_id": board_id
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    print(response.body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode[0]['status'] == true ) {
+        CustomDialog.show(context: context, title: 'Xóa thành công', message: decode[0]['msg'], type: DialogType.success);
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
+      }
     } else {
       throw Exception("Không thể lấy thông tin người dùng");
     }
