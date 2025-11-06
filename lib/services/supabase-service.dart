@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
+import 'package:ktodo_application/model/info-board.dart';
 import 'package:ktodo_application/model/info-user.dart';
 
 import '../model/user.dart';
@@ -250,6 +251,24 @@ class SupabaseAPI {
       else {
         CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
       }
+    } else {
+      throw Exception("Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<BoardResponse> getInfoBoard(String accessToken, String board_id) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/get_info_board_and_user_board_of_board');
+    final body = jsonEncode({
+      "board_id": board_id
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final boardData = BoardResponse.fromJson(data[0]);
+      return boardData;
     } else {
       throw Exception("Không thể lấy thông tin người dùng");
     }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/model/board.dart';
+import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/screens/card/menu-board.dart';
+import 'package:provider/provider.dart';
 
 class TaskInfo extends StatefulWidget {
   final Boards boards;
@@ -13,6 +15,7 @@ class TaskInfo extends StatefulWidget {
 class _TaskInfoState extends State<TaskInfo> {
   @override
   Widget build(BuildContext context) {
+    final boardProvider = Provider.of<BoardProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -59,7 +62,9 @@ class _TaskInfoState extends State<TaskInfo> {
                               alignment: Alignment.centerLeft,
                               child: IconButton(
                                 icon: Icon(Icons.more_horiz_rounded, color: Colors.black),
-                                onPressed: () {
+                                onPressed: () async {
+                                  await boardProvider.getInfoBoard(widget.boards.id.toString());
+                                  if (!mounted) return;
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (_) => MenuBoard(board: widget.boards)),

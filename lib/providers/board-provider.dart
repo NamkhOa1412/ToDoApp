@@ -1,26 +1,6 @@
-// import 'package:flutter/material.dart';
-// import 'package:ktodo_application/model/board.dart';
-// import 'package:ktodo_application/services/supabase-service.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-
-// class BoardProvider extends ChangeNotifier {
-//   List<Boards> _listBoards = [];
-//   List<Boards>? get listBoards => _listBoards;
-//   Future<void> getBoards() async {
-//     final prefs = await SharedPreferences.getInstance();
-//     final token = prefs.getString('access_token');
-//     try {
-//       _listBoards = await SupabaseAPI.getBoard(token!);
-//       notifyListeners();
-//     }
-//     catch (e) {
-//       print('loi getBoards: $e');
-//     }
-//   }
-// }
-
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/model/info-board.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/board.dart';
 import '../services/supabase-service.dart';
@@ -28,6 +8,8 @@ import '../services/supabase-service.dart';
 class BoardProvider extends ChangeNotifier {
   List<Boards> _listBoards = [];
   List<Boards> get listBoards => _listBoards;
+  late BoardResponse _boardResponse; 
+  BoardResponse get boardResponse => _boardResponse;
 
   Timer? _timer;
 
@@ -80,6 +62,18 @@ class BoardProvider extends ChangeNotifier {
     try {
       await SupabaseAPI.deleteBoard(token!, board_id, context);
       getBoards();
+    } catch (e) {
+      print("loi: $e");
+    }
+  }
+
+  Future<void> getInfoBoard(String board_id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      _boardResponse =  await SupabaseAPI.getInfoBoard(token!, board_id);
+      notifyListeners();
     } catch (e) {
       print("loi: $e");
     }
