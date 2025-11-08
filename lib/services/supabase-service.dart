@@ -273,4 +273,30 @@ class SupabaseAPI {
       throw Exception("Không thể lấy thông tin người dùng");
     }
   }
+
+  static Future<bool?> addUser(String accessToken, String board_id, String username, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/add_member');
+    final body = jsonEncode({
+      "p_username": username,
+      "p_board_id": board_id
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode['status'] == "success" ) {
+        Navigator.pop(context);
+        CustomDialog.show(context: context, title: 'Thành công', message: decode['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("Không thể lấy thông tin người dùng");
+    }
+  }
 }

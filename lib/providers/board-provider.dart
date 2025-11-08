@@ -78,4 +78,17 @@ class BoardProvider extends ChangeNotifier {
       print("loi: $e");
     }
   }
+
+  Future<void> addUser(String board_id, String username, BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      final is_success = await SupabaseAPI.addUser(token!, board_id, username, context);
+      is_success == true ?
+      getInfoBoard(board_id) : null;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
 }

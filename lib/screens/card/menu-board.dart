@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/button-custom.dart';
+import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ class _MenuBoardState extends State<MenuBoard> {
   @override
   Widget build(BuildContext context) {
     final boardProvider = Provider.of<BoardProvider>(context);
+    final usernameCtrl = TextEditingController();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -167,7 +169,13 @@ class _MenuBoardState extends State<MenuBoard> {
                       padding: const EdgeInsets.only(bottom: 20, top: 10),
                       child: SizedBox(
                         height: 50,
-                        child: CustomButton(text: 'Thêm thành viên', onPressed: () {}),
+                        child: CustomButton(text: 'Thêm thành viên', onPressed: () {
+                          final TextEditingController usernameCtrl = TextEditingController();
+                          DialogAddUser.show(context: context,usernameCtrl: usernameCtrl, onPressed: () async {
+                            final username = usernameCtrl.text.trim();
+                            await boardProvider.addUser(widget.board.id.toString(), username, context);
+                          },);
+                        }),
                       ),
                     ),
                   ],

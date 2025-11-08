@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/components/input-custom.dart';
 
 enum DialogType { info, success, error, warning }
 
@@ -159,6 +160,94 @@ class ConfirmLogoutDialog {
                     onPressed: () {
                       Navigator.of(context).pop();
                       onPressed();
+                    },
+                    child: Text(
+                      'OK',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],)
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class DialogAddUser {
+  static void show({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required TextEditingController usernameCtrl
+  }) {
+    // IconData iconData = Icons.warning_amber_rounded;
+    // Color color = Colors.orange;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Tên đăng nhập',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    CustomInputField(hintText: 'username',controller: usernameCtrl,),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 12),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(
+                      'Hủy',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 12),
+                    ),
+                    onPressed: () async {
+                      // Navigator.of(context).pop();
+;                     onPressed();
                     },
                     child: Text(
                       'OK',
