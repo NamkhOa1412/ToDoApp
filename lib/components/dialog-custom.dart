@@ -179,11 +179,13 @@ class ConfirmLogoutDialog {
   }
 }
 
-class DialogAddUser {
+class DialogAdd {
   static void show({
     required BuildContext context,
     required VoidCallback onPressed,
-    required TextEditingController usernameCtrl
+    required TextEditingController Ctrl,
+    required String title, 
+    required String hintText,
   }) {
     // IconData iconData = Icons.warning_amber_rounded;
     // Color color = Colors.orange;
@@ -204,14 +206,14 @@ class DialogAddUser {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Tên đăng nhập',
+                      title,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 10),
-                    CustomInputField(hintText: 'username',controller: usernameCtrl,),
+                    CustomInputField(hintText: hintText,controller: Ctrl,),
                   ],
                 ),
                 const SizedBox(height: 20),

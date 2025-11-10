@@ -320,4 +320,31 @@ class SupabaseAPI {
       throw Exception("cchas");
     }
   }
+
+  static Future<bool?> addListBoard(String accessToken, String board_id, String title, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/add_list_to_board');
+    final body = jsonEncode({
+      "p_board_id": board_id,
+      "p_title": title
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      print(decode);
+      if ( decode['status'] == "success" ) {
+        Navigator.pop(context);
+        CustomDialog.show(context: context, title: 'Thành công', message: decode['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("Không thể lấy thông tin người dùng");
+    }
+  }
 }

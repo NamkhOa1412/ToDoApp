@@ -171,10 +171,10 @@ class _MenuBoardState extends State<MenuBoard> {
                         height: 50,
                         child: CustomButton(text: 'Thêm thành viên', onPressed: () {
                           final TextEditingController usernameCtrl = TextEditingController();
-                          DialogAddUser.show(context: context,usernameCtrl: usernameCtrl, onPressed: () async {
+                          DialogAdd.show(context: context,Ctrl: usernameCtrl, onPressed: () async {
                             final username = usernameCtrl.text.trim();
                             await boardProvider.addUser(widget.board.id.toString(), username, context);
-                          },);
+                          }, title: 'Username',hintText: 'Nhập Username');
                         }),
                       ),
                     ),

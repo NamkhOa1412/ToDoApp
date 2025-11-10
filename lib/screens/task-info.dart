@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/screens/board/board-content.dart';
@@ -96,6 +97,11 @@ class _TaskInfoState extends State<TaskInfo> {
 
                                   if (selected == 'add_board') {
                                     print(widget.boards.id.toString());
+                                    final TextEditingController titleCtrl = TextEditingController();
+                                    DialogAdd.show(context: context,Ctrl: titleCtrl, onPressed: () async {
+                                      final title = titleCtrl.text.trim();
+                                      await boardProvider.addListBoard(widget.boards.id.toString(), title, context);
+                                    }, title: 'Tiêu đề',hintText: 'Nhập tiêu đề');
                                   } else if (selected == 'menu_board') {
                                     await boardProvider.getInfoBoard(widget.boards.id.toString());
                                     if (!mounted) return;
