@@ -14,6 +14,7 @@ class TaskInfo extends StatefulWidget {
 }
 
 class _TaskInfoState extends State<TaskInfo> {
+  final GlobalKey menuKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     final boardProvider = Provider.of<BoardProvider>(context);
@@ -60,16 +61,51 @@ class _TaskInfoState extends State<TaskInfo> {
                           Expanded(
                             flex: 1,
                             child: Align(
-                              alignment: Alignment.centerLeft,
+                              alignment: Alignment.centerRight,
                               child: IconButton(
-                                icon: Icon(Icons.more_horiz_rounded, color: Colors.black),
+                                key: menuKey,
+                                icon: const Icon(Icons.more_horiz_rounded, color: Colors.black),
                                 onPressed: () async {
-                                  await boardProvider.getInfoBoard(widget.boards.id.toString());
-                                  if (!mounted) return;
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (_) => MenuBoard(board: widget.boards)),
+                                  // Lấy vị trí của nút
+                                  final RenderBox button =
+                                      menuKey.currentContext!.findRenderObject() as RenderBox;
+                                  final RenderBox overlay =
+                                      Overlay.of(context).context.findRenderObject() as RenderBox;
+                                  final Offset position = button.localToGlobal(Offset.zero, ancestor: overlay);
+
+                                  // Hiện popup menu tại vị trí của nút
+                                  final selected = await showMenu<String>(
+                                    context: context,
+                                    position: RelativeRect.fromLTRB(
+                                      position.dx,
+                                      position.dy + button.size.height,
+                                      position.dx + button.size.width,
+                                      0,
+                                    ),
+                                    items: [
+                                      const PopupMenuItem(
+                                        value: 'add_board',
+                                        child: Text('Thêm bảng'),
+                                      ),
+                                      const PopupMenuItem(
+                                        value: 'menu_board',
+                                        child: Text('Menu Board'),
+                                      ),
+                                    ],
                                   );
+
+                                  if (selected == 'add_board') {
+                                    print(widget.boards.id.toString());
+                                  } else if (selected == 'menu_board') {
+                                    await boardProvider.getInfoBoard(widget.boards.id.toString());
+                                    if (!mounted) return;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => MenuBoard(board: widget.boards),
+                                      ),
+                                    );
+                                  }
                                 },
                               ),
                             ),
