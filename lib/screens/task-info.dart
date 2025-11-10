@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
+import 'package:ktodo_application/screens/board/board-content.dart';
 import 'package:ktodo_application/screens/card/menu-board.dart';
 import 'package:provider/provider.dart';
 
@@ -75,6 +76,11 @@ class _TaskInfoState extends State<TaskInfo> {
                           ),
                         ],
                       ),
+                      Column(
+                        children: [
+                          BoardContent(),
+                        ],
+                      )
                     ],
                   ),
                 ),

@@ -1,13 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/model/info-board.dart';
+import 'package:ktodo_application/model/list-board.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/board.dart';
 import '../services/supabase-service.dart';
 
 class BoardProvider extends ChangeNotifier {
-  List<Boards> _listBoards = [];
-  List<Boards> get listBoards => _listBoards;
+  List<Boards> _boards = [];
+  List<Boards> get boards => _boards;
+
+  List<ListBoard> _listBorad = [];
+  List<ListBoard> get listBorad => _listBorad;
+
   late BoardResponse _boardResponse; 
   BoardResponse get boardResponse => _boardResponse;
 
@@ -23,7 +28,7 @@ class BoardProvider extends ChangeNotifier {
     final token = prefs.getString('access_token');
 
     try {
-      _listBoards = await SupabaseAPI.getBoard(token!);
+      _boards = await SupabaseAPI.getBoard(token!);
       notifyListeners();
     } catch (e) {
       print("loi getBoards: $e");
@@ -87,6 +92,18 @@ class BoardProvider extends ChangeNotifier {
       final is_success = await SupabaseAPI.addUser(token!, board_id, username, context);
       is_success == true ?
       getInfoBoard(board_id) : null;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
+
+  Future<void> getListbyBoardid (String board_id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      _listBorad =  await SupabaseAPI.getListbyBoardid(token!, board_id);
+      notifyListeners();
     } catch (e) {
       print("loi : $e");
     }

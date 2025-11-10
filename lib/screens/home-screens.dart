@@ -3,7 +3,7 @@ import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/providers/user-provider.dart';
 import 'package:ktodo_application/screens/card/list-task.dart';
 import 'package:ktodo_application/screens/card/newtask-card.dart';
-import 'package:ktodo_application/screens/card/task-card.dart';
+import 'package:ktodo_application/screens/card/board-card.dart';
 import 'package:ktodo_application/screens/task-screen/add-new-task-screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';

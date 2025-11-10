@@ -3,10 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/utils/string-utils.dart';
 
-class TaskCard extends StatelessWidget {
+class BoardCard extends StatelessWidget {
   final Boards boards;
 
-  const TaskCard({
+  const BoardCard({
     super.key,
     required this.boards
   });

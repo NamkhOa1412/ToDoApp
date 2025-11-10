@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
-import 'package:ktodo_application/screens/card/task-card.dart';
+import 'package:ktodo_application/screens/card/board-card.dart';
 import 'package:ktodo_application/screens/task-info.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +12,7 @@ class ListTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final boardProvider = Provider.of<BoardProvider>(context);
-    final boards = context.watch<BoardProvider>().listBoards;
+    final boards = context.watch<BoardProvider>().boards;
 
     if (boards.isEmpty) {
       return SizedBox();
@@ -23,7 +23,8 @@ class ListTask extends StatelessWidget {
       itemBuilder: (context, index) {
         final board = boards[index];
         return GestureDetector(
-          onTap: () {
+          onTap: () async {
+            await boardProvider.getListbyBoardid(board.id.toString());
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => TaskInfo(boards: board,)),
@@ -43,7 +44,7 @@ class ListTask extends StatelessWidget {
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
-            child: TaskCard(boards: board),
+            child: BoardCard(boards: board),
           )
         );
       },

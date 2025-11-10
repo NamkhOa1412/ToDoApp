@@ -5,6 +5,7 @@ import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/model/info-board.dart';
 import 'package:ktodo_application/model/info-user.dart';
+import 'package:ktodo_application/model/list-board.dart';
 
 import '../model/user.dart';
 
@@ -297,6 +298,26 @@ class SupabaseAPI {
       }
     } else {
       throw Exception("Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<List<ListBoard>> getListbyBoardid(String accessToken, String board_id) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/get_lists_by_board_id');
+    final body = jsonEncode({
+      "board_uuid": board_id
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      final list = (decode as List)
+        .map((e) => ListBoard.fromJson(e))
+        .toList();
+      return list;
+    } else {
+      throw Exception("cchas");
     }
   }
 }
