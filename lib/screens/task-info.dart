@@ -120,7 +120,7 @@ class _TaskInfoState extends State<TaskInfo> {
                       ),
                       Column(
                         children: [
-                          BoardContent(),
+                          BoardContent(board_id: widget.boards.id.toString(),),
                         ],
                       )
                     ],

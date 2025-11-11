@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
+import 'package:ktodo_application/model/card.dart';
 import 'package:ktodo_application/model/info-board.dart';
 import 'package:ktodo_application/model/info-user.dart';
 import 'package:ktodo_application/model/list-board.dart';
@@ -345,6 +346,28 @@ class SupabaseAPI {
       }
     } else {
       throw Exception("Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<List<CardModel>> loadCard({
+    required String accessToken,
+    required String boardId,
+    required String listId,
+  }) async {
+    final url = Uri.parse('$baseUrl/rest/v1/cards?board_id=eq.$boardId&list_id=eq.$listId&order=position.asc');
+    final response = await http.get(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    });
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final cards = (data as List)
+          .map((json) => CardModel.fromJson(json))
+          .toList();
+      return cards;
+    } else {
+      throw Exception('Không thể load danh sách cards');
     }
   }
 }

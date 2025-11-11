@@ -4,7 +4,8 @@ import 'package:ktodo_application/screens/board/board-column.dart';
 import 'package:provider/provider.dart';
 
 class BoardContent extends StatelessWidget {
-  // final List<String> columns = ['Plan', 'Cần làm', 'Đang làm', 'Hoàn thành'];
+  final String board_id;
+  const BoardContent({Key? key, required this.board_id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class BoardContent extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: listBoard.map((col) => BoardColumn(list: col)).toList(),
+        children: listBoard.map((col) => BoardColumn(list: col, board_id: board_id,)).toList(),
       ),
     );
   }

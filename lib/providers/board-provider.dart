@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/model/card.dart';
 import 'package:ktodo_application/model/info-board.dart';
 import 'package:ktodo_application/model/list-board.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,10 @@ class BoardProvider extends ChangeNotifier {
 
   List<ListBoard> _listBorad = [];
   List<ListBoard> get listBorad => _listBorad;
+
+  final Map<String, List<CardModel>> _cardsByList = {};
+
+  Map<String, List<CardModel>> get cardsByList => _cardsByList;
 
   late BoardResponse _boardResponse; 
   BoardResponse get boardResponse => _boardResponse;
@@ -117,6 +122,19 @@ class BoardProvider extends ChangeNotifier {
       final is_success = await SupabaseAPI.addListBoard(token!, board_id, title, context);
       is_success == true ?
       getListbyBoardid(board_id) : null;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
+
+  Future<void> loadCard(String id, String board_id/*, BuildContext context*/) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      final cards = await SupabaseAPI.loadCard(accessToken: token!,boardId: board_id,listId: id);
+      _cardsByList[id] = cards;
+      notifyListeners();
     } catch (e) {
       print("loi : $e");
     }
