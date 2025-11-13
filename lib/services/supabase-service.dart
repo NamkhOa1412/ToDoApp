@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
+import 'package:ktodo_application/model/card-detail.dart' as cardDetail;
 import 'package:ktodo_application/model/card.dart';
 import 'package:ktodo_application/model/info-board.dart';
 import 'package:ktodo_application/model/info-user.dart';
@@ -368,6 +369,24 @@ class SupabaseAPI {
       return cards;
     } else {
       throw Exception('Không thể load danh sách cards');
+    }
+  }
+
+  static Future<cardDetail.CardDetail> getCardDetail(String accessToken, String card_id) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/get_card_detail');
+    final body = jsonEncode({
+      "p_card_id": card_id
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      final boardData = cardDetail.CardDetail.fromJson(decode);
+      return boardData;
+    } else {
+      throw Exception("loi");
     }
   }
 }

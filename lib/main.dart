@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
+import 'package:ktodo_application/providers/card-provider.dart';
 import 'package:ktodo_application/providers/user-provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth-provider.dart';
@@ -12,6 +13,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => BoardProvider()),
+        ChangeNotifierProvider(create: (_) => CardProvider()),
       ],
       child: const MyApp(),
     ),
