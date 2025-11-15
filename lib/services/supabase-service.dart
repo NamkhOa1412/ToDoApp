@@ -389,4 +389,21 @@ class SupabaseAPI {
       throw Exception("loi");
     }
   }
+
+  static Future<bool?> addComment(String accessToken, String card_id, String cmt) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/add_comment');
+    final body = jsonEncode({
+      "p_card_id": card_id,
+      "p_content": cmt
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception("Không thể lấy thông tin người dùng");
+    }
+  }
 }

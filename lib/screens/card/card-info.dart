@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/input-custom.dart';
 import 'package:ktodo_application/model/card-detail.dart';
@@ -14,16 +16,40 @@ class CardInfo extends StatefulWidget {
 }
 
 class _CardInfoState extends State<CardInfo> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final cardProvider = Provider.of<CardProvider>(context, listen: false);
+  //   cardProvider.getCardDetail(widget.card.id.toString());
+  // }
+
+  Timer? _timer;
+  TextEditingController cmtCtrl = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    final cardProvider = Provider.of<CardProvider>(context, listen: false);
-    cardProvider.getCardDetail(widget.card.id.toString());
+
+    Future.microtask(() {
+      context.read<CardProvider>().getCardDetail(widget.card.id);
+    });
+
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      context.read<CardProvider>().getCardDetail(widget.card.id);
+    });
   }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     final cardDetail = context.watch<CardProvider>().cardDetail;
+    final cardProvider = Provider.of<CardProvider>(context);
 
     if (cardDetail == null) {
       return const Scaffold(
@@ -180,16 +206,19 @@ class _CardInfoState extends State<CardInfo> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: CustomInputField(hintText: 'Thêm nhận xét'),
+                      child: CustomInputField(hintText: 'Thêm nhận xét', controller: cmtCtrl,),
                     ),
                     const SizedBox(width: 8),
                     IconButton(
                       icon: const Icon(Icons.send, color: Color(0xFF26A69A)),
-                      onPressed: () {
-                        // if (_commentController.text.isNotEmpty) {
-                        //   print('Comment: ${_commentController.text}');
-                        //   _commentController.clear();
-                        // }
+                      onPressed: () async {
+                        if (cmtCtrl.text.isNotEmpty) {
+                          final is_true = await cardProvider.addComment(cardDetail.id.toString(), cmtCtrl.text);
+                          if (is_true == true) {
+                            cmtCtrl.clear(); 
+                            FocusScope.of(context).unfocus();
+                          } 
+                        }
                       },
                     ),
                   ],

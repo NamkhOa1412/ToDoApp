@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/model/list-board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
+import 'package:ktodo_application/providers/card-provider.dart';
 import 'package:ktodo_application/screens/board/task-card.dart';
 import 'package:ktodo_application/screens/card/card-info.dart';
 import 'package:provider/provider.dart';
@@ -47,12 +48,22 @@ class _BoardColumnState extends State<BoardColumn> {
           // TaskCard(title: title)
           for (var card in cards) ...[
             GestureDetector(onTap: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (_) => CardInfo(card: card,),
+              //   ),
+              // );
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => CardInfo(card: card,),
+                  builder: (_) => ChangeNotifierProvider(
+                    create: (_) => CardProvider(),
+                    child: CardInfo(card: card),
+                  ),
                 ),
               );
+
             } ,child: TaskCard(title: card.title ?? "Không có tiêu đề")),
             const SizedBox(height: 6),
           ],

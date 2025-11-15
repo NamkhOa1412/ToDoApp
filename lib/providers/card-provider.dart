@@ -19,4 +19,18 @@ class CardProvider extends ChangeNotifier {
       print("loi: $e");
     }
   }
+
+
+  Future<bool?> addComment(String card_id, String cmt) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      final is_true = await SupabaseAPI.addComment(token!, card_id, cmt);
+      getCardDetail(card_id);
+      return is_true;
+    } catch (e) {
+      print("loi: $e");
+    }
+  }
 }
