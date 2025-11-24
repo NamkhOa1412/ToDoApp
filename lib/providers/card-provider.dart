@@ -33,4 +33,10 @@ class CardProvider extends ChangeNotifier {
       print("loi: $e");
     }
   }
+
+  Future<void> updateStatusCheckListItem(String id, bool status) async {
+    print(id);
+    print(status);
+    notifyListeners();
+  }
 }

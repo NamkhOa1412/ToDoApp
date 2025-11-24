@@ -51,6 +51,28 @@ class SupabaseAPI {
     }
   }
 
+  static Future<User> refreshToken(String refreshToken) async {
+    final url = Uri.parse('$baseUrl/auth/v1/token?grant_type=refresh_token');
+
+    final res = await http.post(url,
+        headers: headers,
+        body: jsonEncode({"refresh_token": refreshToken}));
+
+    if (res.statusCode != 200) {
+      throw Exception("Refresh token failed: ${res.body}");
+    }
+
+    final data = jsonDecode(res.body);
+    print('refreshToken');
+    print(data);
+    return User.fromJson({
+      "access_token": data["access_token"],
+      "refresh_token": data["refresh_token"],
+      "expires_at": data["expires_at"],
+      "user": data["user"],
+    });
+  }
+
   static Future<String?> signup(String email, String username, String password, String fullname) async {
     final url = Uri.parse('$baseUrl/auth/v1/signup');
     final body = jsonEncode({
@@ -130,7 +152,7 @@ class SupabaseAPI {
         throw Exception("Dữ liệu người dùng không hợp lệ");
       }
     } else {
-      throw Exception("Không thể lấy thông tin người dùng");
+      throw Exception("1 Không thể lấy thông tin người dùng");
     }
   }
 
@@ -148,7 +170,7 @@ class SupabaseAPI {
         throw Exception("Dữ liệu người dùng không hợp lệ");
       }
     } else {
-      throw Exception("Không thể lấy thông tin người dùng");
+      throw Exception("2 Không thể lấy thông tin người dùng");
     }
   }
 
@@ -203,7 +225,7 @@ class SupabaseAPI {
         .toList();
       return boards;
     } else {
-      throw Exception("Không thể lấy thông tin người dùng");
+      throw Exception("3 Không thể lấy thông tin người dùng");
     }
   }
 
@@ -232,7 +254,7 @@ class SupabaseAPI {
         CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
       }
     } else {
-      throw Exception("Không thể lấy thông tin người dùng");
+      throw Exception("4 Không thể lấy thông tin người dùng");
     }
   }
 
@@ -255,7 +277,7 @@ class SupabaseAPI {
         CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
       }
     } else {
-      throw Exception("Không thể lấy thông tin người dùng");
+      throw Exception("5 Không thể lấy thông tin người dùng");
     }
   }
 
@@ -273,7 +295,7 @@ class SupabaseAPI {
       final boardData = BoardResponse.fromJson(data[0]);
       return boardData;
     } else {
-      throw Exception("Không thể lấy thông tin người dùng");
+      throw Exception("6 Không thể lấy thông tin người dùng");
     }
   }
 
@@ -299,7 +321,7 @@ class SupabaseAPI {
         return false;
       }
     } else {
-      throw Exception("Không thể lấy thông tin người dùng");
+      throw Exception("7 Không thể lấy thông tin người dùng");
     }
   }
 
@@ -346,7 +368,7 @@ class SupabaseAPI {
         return false;
       }
     } else {
-      throw Exception("Không thể lấy thông tin người dùng");
+      throw Exception("8 Không thể lấy thông tin người dùng");
     }
   }
 
@@ -386,7 +408,7 @@ class SupabaseAPI {
       final boardData = cardDetail.CardDetail.fromJson(decode);
       return boardData;
     } else {
-      throw Exception("loi");
+      throw Exception("1 loi");
     }
   }
 
@@ -403,7 +425,24 @@ class SupabaseAPI {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception("Không thể lấy thông tin người dùng");
+      throw Exception("9 Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<bool?> updateStatusCheckListItem(String accessToken, String id, bool status) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/addupdate_checklist_item_status_comment');
+    final body = jsonEncode({
+      "p_id": id,
+      "p_is_done": status
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception("10 Không thể lấy thông tin người dùng");
     }
   }
 }

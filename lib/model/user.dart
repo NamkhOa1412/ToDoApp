@@ -3,6 +3,8 @@ class User {
   String? email;
   String? phone;
   String? accessToken;
+  String? refreshToken;
+  int ? expiresAt;
   String? error;
 
   User({this.id, this.email, this.phone, this.accessToken, this.error});
@@ -21,6 +23,8 @@ class User {
       'email': email,
       'phone': phone,
       'accessToken': accessToken,
+      'refresh_token': refreshToken,
+      'expiresAt': expiresAt,
       'error': error,
     };
   }

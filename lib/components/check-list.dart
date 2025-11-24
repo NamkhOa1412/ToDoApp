@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/model/card-detail.dart';
+import 'package:ktodo_application/providers/card-provider.dart';
+import 'package:provider/provider.dart';
 
 class CheckListUI extends StatefulWidget {
   final List<Checklists> checklists;
@@ -12,6 +14,8 @@ class CheckListUI extends StatefulWidget {
 class _CheckListUIState extends State<CheckListUI> {
   @override
   Widget build(BuildContext context) {
+    final cardProvider = Provider.of<CardProvider>(context);
+
     if (widget.checklists.isEmpty) {
       return const Text(
         'Chưa có danh sách công việc',
@@ -44,7 +48,6 @@ class _CheckListUIState extends State<CheckListUI> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header + expand/collapse
                     Row(
                       children: [
                         Expanded(
@@ -70,12 +73,10 @@ class _CheckListUIState extends State<CheckListUI> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        const Icon(Icons.more_vert, color: Colors.white70, size: 20),
+                        // const Icon(Icons.more_vert, color: Colors.white70, size: 20),
                       ],
                     ),
                     const SizedBox(height: 8),
-
-                    // Progress line luôn hiển thị
                     LayoutBuilder(
                       builder: (context, constraints) {
                         final maxWidth = constraints.maxWidth;
@@ -102,8 +103,6 @@ class _CheckListUIState extends State<CheckListUI> {
                         );
                       },
                     ),
-
-                    // Nếu expanded mới hiển thị tasks
                     if (isExpanded) ...[
                       const SizedBox(height: 12),
                       Column(
@@ -114,7 +113,12 @@ class _CheckListUIState extends State<CheckListUI> {
                               children: [
                                 Checkbox(
                                   value: item.isDone,
-                                  onChanged: (val) {},
+                                  onChanged: (val) async {
+                                    await cardProvider.updateStatusCheckListItem(item.id.toString(), item.isDone!);
+                                    // setState(() {
+                                      item.isDone = !item.isDone!;
+                                    // });
+                                  },
                                   activeColor: const Color(0xFF26A69A),
                                 ),
                                 Expanded(

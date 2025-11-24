@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/model/card-detail.dart';
+import 'package:ktodo_application/utils/string-utils.dart';
 
 class CommentUI extends StatelessWidget {
   final List<Comments> comment;
@@ -25,7 +26,6 @@ class CommentUI extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Username
                     Text(
                       comment.user?.username ?? 'Unknown',
                       style: const TextStyle(
@@ -35,7 +35,6 @@ class CommentUI extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    // Nội dung comment
                     Text(
                       comment.content ?? '',
                       style: const TextStyle(
@@ -44,9 +43,8 @@ class CommentUI extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    // Thời gian comment
                     Text(
-                      comment.createdAt ?? '',
+                      StringUtils.formatDate(comment.createdAt!),
                       style: const TextStyle(
                         color: Colors.black54,
                         fontSize: 12,

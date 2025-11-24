@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,18 +9,31 @@ import '../services/supabase-service.dart';
 class AuthProvider extends ChangeNotifier {
   User? _user;
   String? _accessToken;
+  String? _refreshToken;
+  int? _expiresAt;
+
+  Timer? _refreshTimer;
 
   User? get user => _user;
-  bool get isLoggedIn => _accessToken != null;
+  bool get isLoggedIn => _accessToken != null && _refreshToken != null;
 
   Future<void> login(String email, String password) async {
     try {
+      // final userData = await SupabaseAPI.login(email, password);
+      // _user = userData;
+      // _accessToken = userData.accessToken;
+
+      // final prefs = await SharedPreferences.getInstance();
+      // await prefs.setString('access_token', _accessToken!);
       final userData = await SupabaseAPI.login(email, password);
+
       _user = userData;
       _accessToken = userData.accessToken;
+      _refreshToken = userData.refreshToken;
+      _expiresAt = userData.expiresAt;
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('access_token', _accessToken!);
+      await saveSession();
+      scheduleAutoRefresh();
 
       notifyListeners();
     } catch (e) {
@@ -44,20 +59,31 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> loadSession() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
 
-    if (token != null && token.isNotEmpty) {
-      _accessToken = token;
+    _accessToken = prefs.getString('access_token');
+    _refreshToken = prefs.getString('refresh_token');
+    _expiresAt = prefs.getInt('expires_at');
 
+    if (_accessToken == null || _refreshToken == null) return;
+
+    final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+    if (_expiresAt == null || (_expiresAt! - now) < 60) {
       try {
-        final userData = await SupabaseAPI.getUser(token);
-        _user = userData;
-        notifyListeners();
+        await refreshToken();
       } catch (e) {
-        print('Load session error: $e');
-        _user = null;
-        _accessToken = null;
+        print('Refresh on load error: $e');
+        logout();
+        return;
       }
+    }
+
+    try {
+      _user = await SupabaseAPI.getUser(_accessToken!);
+      scheduleAutoRefresh();
+      notifyListeners();
+    } catch (e) {
+      logout();
     }
   }
 
@@ -90,5 +116,53 @@ class AuthProvider extends ChangeNotifier {
     _user = null;
     _accessToken = null;
     notifyListeners();
+  }
+
+  Future<void> saveSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('access_token', _accessToken ?? "");
+    await prefs.setString('refresh_token', _refreshToken ?? "");
+    if (_expiresAt != null) prefs.setInt('expires_at', _expiresAt!);
+  }
+
+  Future<void> refreshToken() async {
+    if (_refreshToken == null) throw Exception("Không có refresh token!");
+
+    try {
+      final data = await SupabaseAPI.refreshToken(_refreshToken!);
+
+      _accessToken = data.accessToken;
+      _refreshToken = data.refreshToken;
+      _expiresAt = data.expiresAt;
+
+      await saveSession();
+      notifyListeners();
+
+      print("Token refreshed thành công");
+    } catch (e) {
+      print("Refresh token lỗi: $e");
+      logout();
+      rethrow;
+    }
+  }
+
+  void scheduleAutoRefresh() {
+    _refreshTimer?.cancel();
+
+    if (_expiresAt == null) return;
+
+    final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    final secondsLeft = _expiresAt! - now;
+
+    final refreshIn = secondsLeft - 60;
+
+    if (refreshIn <= 0) {
+      refreshToken();
+      return;
+    }
+
+    _refreshTimer = Timer(Duration(seconds: refreshIn), () {
+      refreshToken();
+    });
   }
 }
