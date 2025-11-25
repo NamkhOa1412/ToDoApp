@@ -51,28 +51,6 @@ class SupabaseAPI {
     }
   }
 
-  static Future<User> refreshToken(String refreshToken) async {
-    final url = Uri.parse('$baseUrl/auth/v1/token?grant_type=refresh_token');
-
-    final res = await http.post(url,
-        headers: headers,
-        body: jsonEncode({"refresh_token": refreshToken}));
-
-    if (res.statusCode != 200) {
-      throw Exception("Refresh token failed: ${res.body}");
-    }
-
-    final data = jsonDecode(res.body);
-    print('refreshToken');
-    print(data);
-    return User.fromJson({
-      "access_token": data["access_token"],
-      "refresh_token": data["refresh_token"],
-      "expires_at": data["expires_at"],
-      "user": data["user"],
-    });
-  }
-
   static Future<String?> signup(String email, String username, String password, String fullname) async {
     final url = Uri.parse('$baseUrl/auth/v1/signup');
     final body = jsonEncode({
