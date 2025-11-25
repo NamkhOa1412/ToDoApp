@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 
 class CheckListUI extends StatefulWidget {
   final List<Checklists> checklists;
-  const CheckListUI({super.key, required this.checklists});
+  final String cardId;
+  const CheckListUI({super.key, required this.checklists, required this.cardId});
 
   @override
   State<CheckListUI> createState() => _CheckListUIState();
@@ -15,6 +16,7 @@ class _CheckListUIState extends State<CheckListUI> {
   @override
   Widget build(BuildContext context) {
     final cardProvider = Provider.of<CardProvider>(context);
+    Map<String, bool> loadingMap = {};
 
     if (widget.checklists.isEmpty) {
       return const Text(
@@ -107,17 +109,49 @@ class _CheckListUIState extends State<CheckListUI> {
                       const SizedBox(height: 12),
                       Column(
                         children: cl.items!.map((item) {
+                          final isLoading = loadingMap[item.id] == true;
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             child: Row(
                               children: [
-                                Checkbox(
+                                // Checkbox(
+                                //   value: item.isDone,
+                                //   onChanged: (val)  async{
+                                //     if (val == null) return;
+                                //     await cardProvider.updateStatusCheckListItem(widget.cardId ,item.id.toString(), val);
+                                //   },
+                                //   activeColor: const Color(0xFF26A69A),
+                                // ),
+                                isLoading ? 
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Color(0xFF26A69A),
+                                    ),
+                                  ),
+                                )
+                                : Checkbox(
                                   value: item.isDone,
                                   onChanged: (val) async {
-                                    await cardProvider.updateStatusCheckListItem(item.id.toString(), item.isDone!);
-                                    // setState(() {
-                                      item.isDone = !item.isDone!;
-                                    // });
+                                    if (val == null) return;
+
+                                    setState(() {
+                                      loadingMap[item.id!] = true; 
+                                    });
+
+                                    await cardProvider.updateStatusCheckListItem(
+                                      widget.cardId,
+                                      item.id.toString(),
+                                      val,
+                                    );
+
+                                    setState(() {
+                                      loadingMap[item.id!] = false; 
+                                    });
                                   },
                                   activeColor: const Color(0xFF26A69A),
                                 ),

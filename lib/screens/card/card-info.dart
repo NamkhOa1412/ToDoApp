@@ -183,7 +183,7 @@ class _CardInfoState extends State<CardInfo> {
                       ],
                     ),
                     const SizedBox(height: 6),
-                    CheckListUI(checklists: cardDetail.checklists!),
+                    CheckListUI(checklists: cardDetail.checklists!, cardId: cardDetail.id.toString(),),
 
                     const SizedBox(height: 16),
                     const Divider(),

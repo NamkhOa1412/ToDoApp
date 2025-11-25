@@ -34,9 +34,16 @@ class CardProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateStatusCheckListItem(String id, bool status) async {
-    print(id);
-    print(status);
-    notifyListeners();
+  Future<bool?> updateStatusCheckListItem(String card_id, String id, bool status) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      final is_true = await SupabaseAPI.updateStatusCheckListItem(token!, id, status);
+      getCardDetail(card_id);
+      return is_true;
+    } catch (e) {
+      print("loi: $e");
+    }
   }
 }

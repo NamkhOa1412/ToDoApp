@@ -408,7 +408,7 @@ class SupabaseAPI {
   }
 
   static Future<bool?> updateStatusCheckListItem(String accessToken, String id, bool status) async {
-    final url = Uri.parse('$baseUrl/rest/v1/rpc/addupdate_checklist_item_status_comment');
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/update_checklist_item_status');
     final body = jsonEncode({
       "p_id": id,
       "p_is_done": status
@@ -417,10 +417,15 @@ class SupabaseAPI {
       ...headers,
       'Authorization': 'Bearer $accessToken',
     }, body: body);
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception("10 Không thể lấy thông tin người dùng");
+    try {
+      if (response.statusCode == 200) {
+        final decode = jsonDecode(response.body);
+        return decode;
+      } else {
+        throw Exception("10 Không thể lấy thông tin người dùng");
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }
