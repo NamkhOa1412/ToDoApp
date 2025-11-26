@@ -174,11 +174,54 @@ class _CheckListUIState extends State<CheckListUI> {
                         }).toList(),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Thêm mục...',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontStyle: FontStyle.italic,
+                      // const Text(
+                      //   'Thêm mục...',
+                      //   style: TextStyle(
+                      //     color: Colors.white70,
+                      //     fontStyle: FontStyle.italic,
+                      //   ),
+                      // ),
+                      cardProvider.isAdding[cl.id!] == true
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: cardProvider.controllers[cl.id!],
+                              autofocus: true,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              final text = cardProvider.getText(cl.id!);
+                              if (text.isEmpty) return;
+
+                              await cardProvider.addCheckListItem(
+                                cl.id!, text , context, widget.cardId
+                              );
+
+                              cardProvider.clearText(cl.id!);
+                              cardProvider.toggleAdding(cl.id!, false);
+                            },
+                            child: const Icon(Icons.check, color: Color(0xFF26A69A)),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              cardProvider.clearText(cl.id!);
+                              cardProvider.toggleAdding(cl.id!, false);
+                            },
+                            child: const Icon(Icons.close, color: Colors.redAccent),
+                          ),
+                        ],
+                      )
+                    : GestureDetector(
+                        onTap: () => cardProvider.toggleAdding(cl.id!, true),
+                        child: const Text(
+                          'Thêm mục...',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                     ],

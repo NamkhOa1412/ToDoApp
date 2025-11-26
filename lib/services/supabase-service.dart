@@ -428,4 +428,29 @@ class SupabaseAPI {
       print(e);
     }
   }
+
+  static Future<bool?> addCheckListItem(String accessToken, String cl_id, String content, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/add_checklist_item');
+    final body = jsonEncode({
+      "p_checklist_id": cl_id,
+      "p_content": content
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode[0]['status'] == true ) {
+        CustomDialog.show(context: context, title: 'Thành công', message: decode[0]['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("11 Không thể lấy thông tin người dùng");
+    }
+  }
 }
