@@ -7,6 +7,7 @@ class CardProvider extends ChangeNotifier {
   CardDetail? _cardDetail;
   Map<String, bool> isAdding = {};
   Map<String, TextEditingController> controllers = {};
+  Map<String, bool> expandedStatus = {};
 
   CardDetail? get cardDetail => _cardDetail;
 
@@ -16,6 +17,11 @@ class CardProvider extends ChangeNotifier {
 
     try {
       _cardDetail = await SupabaseAPI.getCardDetail(token!, card_id);
+
+      if (_cardDetail?.checklists != null) {
+        initExpandedStatus(_cardDetail!.checklists!);
+      }
+
       notifyListeners();
     } catch (e) {
       print("loi: $e");
@@ -76,5 +82,16 @@ class CardProvider extends ChangeNotifier {
     } catch (e) {
       print("loi : $e");
     }
+  }
+  
+  void initExpandedStatus(List<Checklists> list) {
+    for (var cl in list) {
+      expandedStatus.putIfAbsent(cl.id!, () => true);
+    }
+  }
+
+  void changeStatusExpanded(String id) {
+    expandedStatus[id] = !(expandedStatus[id] ?? true);
+    notifyListeners();
   }
 }

@@ -25,10 +25,6 @@ class _CheckListUIState extends State<CheckListUI> {
       );
     }
 
-    final Map<String, bool> expandedStatus = {
-      for (var cl in widget.checklists) cl.id!: true,
-    };
-
     return StatefulBuilder(
       builder: (context, setState) {
         return Column(
@@ -37,7 +33,7 @@ class _CheckListUIState extends State<CheckListUI> {
             final totalTasks = cl.items!.length;
             final doneTasks = cl.items!.where((t) => t.isDone!).length;
             final progress = totalTasks > 0 ? doneTasks / totalTasks : 0.0;
-            final isExpanded = expandedStatus[cl.id!]!;
+            final isExpanded = cardProvider.expandedStatus[cl.id!] ?? true;
 
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
@@ -64,9 +60,7 @@ class _CheckListUIState extends State<CheckListUI> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            setState(() {
-                              expandedStatus[cl.id!] = !isExpanded;
-                            });
+                            cardProvider.changeStatusExpanded(cl.id!);
                           },
                           child: Icon(
                             isExpanded ? Icons.expand_less : Icons.expand_more,
