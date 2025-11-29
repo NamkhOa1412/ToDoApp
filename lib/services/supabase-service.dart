@@ -453,4 +453,30 @@ class SupabaseAPI {
       throw Exception("11 Không thể lấy thông tin người dùng");
     }
   }
+
+  static Future<bool?> addCheckList(String accessToken, String cardId, String title, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/add_checklists');
+    final body = jsonEncode({
+      "p_card_id": cardId,
+      "p_title": title
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode[0]['status'] == true ) {
+        Navigator.pop(context);
+        CustomDialog.show(context: context, title: 'Thành công', message: decode[0]['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("12 Không thể lấy thông tin người dùng");
+    }
+  }
 }

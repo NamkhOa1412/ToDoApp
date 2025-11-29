@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/check-list.dart';
 import 'package:ktodo_application/components/comment.dart';
+import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/components/input-custom.dart';
 import 'package:ktodo_application/model/card-detail.dart';
 import 'package:ktodo_application/model/card.dart';
@@ -177,6 +178,14 @@ class _CardInfoState extends State<CardInfo> {
                         Expanded(
                           flex: 2,
                           child: GestureDetector(
+                            onTap: () {
+                              final TextEditingController titleCtrl = TextEditingController();
+                              DialogAdd.show(context: context,Ctrl: titleCtrl, 
+                                onPressed: () async {
+                                final title = titleCtrl.text.trim();
+                                await cardProvider.addCheckList(widget.card.id.toString(), title, context);
+                              }, title: 'Tên Task',hintText: 'Nhập tên task');
+                            },
                             child: Icon(Icons.add, color: Color(0xFF26A69A))
                           )
                         ),

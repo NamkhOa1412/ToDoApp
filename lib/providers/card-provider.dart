@@ -94,4 +94,17 @@ class CardProvider extends ChangeNotifier {
     expandedStatus[id] = !(expandedStatus[id] ?? true);
     notifyListeners();
   }
+
+  Future<void> addCheckList(String cardId, String title, BuildContext context) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    
+    try {
+      final is_success = await SupabaseAPI.addCheckList(token!, cardId, title, context);
+      is_success == true ?
+      getCardDetail(cardId) : null;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
 }
