@@ -120,4 +120,17 @@ class CardProvider extends ChangeNotifier {
       print("loi : $e");
     }
   }
+
+  Future<void> updateChecklistTitle(String cardId, String checklistId, String title, BuildContext context) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    
+    try {
+      final is_success = await SupabaseAPI.updateChecklistTitle(token!, checklistId, title, context);
+      is_success == true ?
+      getCardDetail(cardId) : null;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
 }

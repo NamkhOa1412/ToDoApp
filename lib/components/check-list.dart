@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/app-menu.dart';
+import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/card-detail.dart';
 import 'package:ktodo_application/providers/card-provider.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +55,12 @@ class _CheckListUIState extends State<CheckListUI> {
                     break;
 
                   case 'rename':
-                    print('Đổi tên checklist: ${cl.title}');
+                    final TextEditingController titleCtrl = TextEditingController();
+                    DialogAdd.show(context: context,Ctrl: titleCtrl, 
+                      onPressed: () async {
+                      final title = titleCtrl.text.trim();
+                      await cardProvider.updateChecklistTitle(widget.cardId, cl.id.toString(), title, context);
+                    }, title: 'Tên Danh sách',hintText: 'Nhập tên danh sách');
                     break;
 
                   // case 'update':
