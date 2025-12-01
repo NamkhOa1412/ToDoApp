@@ -107,4 +107,17 @@ class CardProvider extends ChangeNotifier {
       print("loi : $e");
     }
   }
+
+  Future<void> deleteCheckList(String cardId, String checklistId, BuildContext context) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    
+    try {
+      final is_success = await SupabaseAPI.deleteCheckList(token!, checklistId, context);
+      is_success == true ?
+      getCardDetail(cardId) : null;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
 }
