@@ -529,4 +529,28 @@ class SupabaseAPI {
       throw Exception("14 Không thể lấy thông tin người dùng");
     }
   }
+
+  static Future<bool?> deleteChecklistItem(String accessToken, String itemId, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/delete_checklist_item');
+    final body = jsonEncode({
+      "p_item_id": itemId
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode[0]['status'] == true ) {
+        CustomDialog.show(context: context, title: 'Thành công', message: decode[0]['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("14 Không thể lấy thông tin người dùng");
+    }
+  }
 }

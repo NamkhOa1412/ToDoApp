@@ -45,13 +45,16 @@ class _CheckListUIState extends State<CheckListUI> {
                   items: {
                     'delete': 'Xóa danh sách',
                     'rename': 'Đổi tên',
-                    // 'update': 'Xóa Item',
+                    'update': cardProvider.deletingStatus[cl.id!] == true ? 'Tắt xóa Item' : 'Bật xóa Item',
                   },
                 );
 
                 switch (result) {
                   case 'delete':
-                    await cardProvider.deleteCheckList(widget.cardId, cl.id.toString(), context);
+                    ConfirmLogoutDialog.show(context: context, title: 'Xác nhận xóa', message: 'Bạn có chắc chắn muốn xóa danh sách này !', onPressed: () async {
+                      await cardProvider.deleteCheckList(widget.cardId, cl.id.toString(), context);
+                    });
+                    
                     break;
 
                   case 'rename':
@@ -63,9 +66,10 @@ class _CheckListUIState extends State<CheckListUI> {
                     }, title: 'Tên Danh sách',hintText: 'Nhập tên danh sách');
                     break;
 
-                  // case 'update':
-                  //   print('xóa item: ${cl.title}');
-                  //   break;
+                  case 'update':
+                    final isDeleting = cardProvider.deletingStatus[cl.id!] == true;
+                    cardProvider.toggleDeleting(cl.id!, !isDeleting);
+                    break;
                 }
               },
 
@@ -195,7 +199,19 @@ class _CheckListUIState extends State<CheckListUI> {
                                         decorationThickness: 2,
                                       ),
                                     ),
-                                  )
+                                  ),
+                                  if (cardProvider.deletingStatus[cl.id!] == true)
+                                    GestureDetector(
+                                      onTap: () async {
+                                        ConfirmLogoutDialog.show(context: context, title: 'Xác nhận xóa', message: 'Bạn có chắc chắn muốn xóa item này !', onPressed: () async {
+                                          await cardProvider.deleteChecklistItem(widget.cardId, item.id.toString(), context);
+                                        });
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(left: 8),
+                                        child: Icon(Icons.close, color: Colors.redAccent),
+                                      ),
+                                  ),
                                 ],
                               ),
                             );

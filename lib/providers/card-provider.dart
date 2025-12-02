@@ -8,6 +8,7 @@ class CardProvider extends ChangeNotifier {
   Map<String, bool> isAdding = {};
   Map<String, TextEditingController> controllers = {};
   Map<String, bool> expandedStatus = {};
+  Map<String, bool> deletingStatus = {};
 
   CardDetail? get cardDetail => _cardDetail;
 
@@ -127,6 +128,24 @@ class CardProvider extends ChangeNotifier {
     
     try {
       final is_success = await SupabaseAPI.updateChecklistTitle(token!, checklistId, title, context);
+      is_success == true ?
+      getCardDetail(cardId) : null;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
+
+  void toggleDeleting(String checklistId, bool value) {
+    deletingStatus[checklistId] = value;
+    notifyListeners();
+  }
+
+  Future<void> deleteChecklistItem(String cardId, String itemId, BuildContext context) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    
+    try {
+      final is_success = await SupabaseAPI.deleteChecklistItem(token!, itemId, context);
       is_success == true ?
       getCardDetail(cardId) : null;
     } catch (e) {
