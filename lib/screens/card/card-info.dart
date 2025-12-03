@@ -5,7 +5,7 @@ import 'package:ktodo_application/components/check-list.dart';
 import 'package:ktodo_application/components/comment.dart';
 import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/components/input-custom.dart';
-import 'package:ktodo_application/model/card-detail.dart';
+import 'package:ktodo_application/components/member-select.dart';
 import 'package:ktodo_application/model/card.dart';
 import 'package:ktodo_application/providers/card-provider.dart';
 import 'package:provider/provider.dart';
@@ -119,13 +119,31 @@ class _CardInfoState extends State<CardInfo> {
                         Expanded(
                           flex: 2,
                           child: GestureDetector(
+                            onTap: () async {
+                              final boardUsers = await cardProvider.getBoardUsers(cardDetail.boardId.toString());
+                              if (!mounted) return;
+                              showModalBottomSheet(
+                                context: context,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+                                ),
+                                builder: (context) {
+                                  return MemberSelectSheet(
+                                    users: boardUsers ?? [],
+                                    onSelect: (u) async {
+                                      await cardProvider.addUsertoCard(widget.card.id, u.id.toString(), context);
+                                    },
+                                  );
+                                },
+                              );
+                            },
                             child: Icon(Icons.add, color: Color(0xFF26A69A),)
                           )
                         ),
                       ],
                     ),
                     const SizedBox(height: 6),
-                    Container(
+                    cardDetail.members != null && cardDetail.members!.isNotEmpty ? Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -161,7 +179,7 @@ class _CardInfoState extends State<CardInfo> {
                           );
                         },
                       ),
-                    ),
+                    ) : SizedBox(),
                     const SizedBox(height: 16),
                     const Divider(),
 

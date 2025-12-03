@@ -17,7 +17,6 @@ class _MenuBoardState extends State<MenuBoard> {
   @override
   Widget build(BuildContext context) {
     final boardProvider = Provider.of<BoardProvider>(context);
-    final usernameCtrl = TextEditingController();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(

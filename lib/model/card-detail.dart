@@ -5,6 +5,7 @@ class CardDetail {
   dynamic? dueAt;
   String? createdAt;
   String? updatedAt;
+  String? boardId;
   List<Members>? members;
   List<Checklists>? checklists;
   List<Comments>? comments;
@@ -17,6 +18,7 @@ class CardDetail {
       this.createdAt,
       this.updatedAt,
       this.members,
+      this.boardId,
       this.checklists,
       this.comments});
 
@@ -27,6 +29,7 @@ class CardDetail {
     dueAt = json['due_at'] ?? '';
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    boardId = json['board_id'];
     if (json['members'] != null) {
       members = <Members>[];
       json['members'].forEach((v) {
@@ -55,6 +58,7 @@ class CardDetail {
     data['due_at'] = this.dueAt;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['board_id'] = this.boardId;
     if (this.members != null) {
       data['members'] = this.members!.map((v) => v.toJson()).toList();
     }

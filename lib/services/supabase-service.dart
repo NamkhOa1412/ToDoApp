@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ktodo_application/components/dialog-custom.dart';
+import 'package:ktodo_application/model/board-users.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/model/card-detail.dart' as cardDetail;
 import 'package:ktodo_application/model/card.dart';
@@ -550,7 +551,52 @@ class SupabaseAPI {
         return false;
       }
     } else {
-      throw Exception("14 Không thể lấy thông tin người dùng");
+      throw Exception("15 Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<List<BoardUsers>> getBoardUsers(String accessToken, String boardId) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/get_board_users');
+    final body = jsonEncode({
+      "p_board_id": boardId
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      final list = (decode as List)
+        .map((e) => BoardUsers.fromJson(e))
+        .toList();
+      return list;
+    } else {
+      throw Exception("16 Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<bool?> addUsertoCard(String accessToken, String cardId, String userId, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/add_or_remove_user_in_card');
+    final body = jsonEncode({
+      "p_card_id": cardId,
+      "p_user_id": userId
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode[0]['status'] == true ) {
+        CustomDialog.show(context: context, title: 'Thành công', message: decode[0]['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("17 Không thể lấy thông tin người dùng");
     }
   }
 }

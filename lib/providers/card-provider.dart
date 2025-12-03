@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/model/board-users.dart';
 import 'package:ktodo_application/model/card-detail.dart';
 import 'package:ktodo_application/services/supabase-service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CardProvider extends ChangeNotifier {
   CardDetail? _cardDetail;
+  // BoardUsers? _boardUsers;
   Map<String, bool> isAdding = {};
   Map<String, TextEditingController> controllers = {};
   Map<String, bool> expandedStatus = {};
   Map<String, bool> deletingStatus = {};
 
   CardDetail? get cardDetail => _cardDetail;
+  // BoardUsers? get boardUsers => _boardUsers;
 
   Future<void> getCardDetail(String card_id) async {
     final prefs = await SharedPreferences.getInstance();
@@ -146,6 +149,32 @@ class CardProvider extends ChangeNotifier {
     
     try {
       final is_success = await SupabaseAPI.deleteChecklistItem(token!, itemId, context);
+      is_success == true ?
+      getCardDetail(cardId) : null;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
+
+  Future<List<BoardUsers>?> getBoardUsers(String boardId) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    
+    try {
+      final boardUsers = await SupabaseAPI.getBoardUsers(token!, boardId);
+      return boardUsers;
+    } catch (e) {
+      print("loi : $e");
+      return null;
+    }
+  }
+
+  Future<void> addUsertoCard(String cardId, String userId, BuildContext context) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    
+    try {
+      final is_success = await SupabaseAPI.addUsertoCard(token!, cardId, userId, context);
       is_success == true ?
       getCardDetail(cardId) : null;
     } catch (e) {
