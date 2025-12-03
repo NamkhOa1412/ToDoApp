@@ -599,4 +599,27 @@ class SupabaseAPI {
       throw Exception("17 Không thể lấy thông tin người dùng");
     }
   }
+  
+  static Future<bool?> updateDesCard(String accessToken, String cardId, String des) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/update_card_description');
+    final body = jsonEncode({
+      "p_card_id": cardId,
+      "p_description": des
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode[0]['status'] == true ) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    } else {
+      throw Exception("18 Không thể lấy thông tin người dùng");
+    }
+  }
 }

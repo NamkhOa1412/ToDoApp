@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/button-custom.dart';
 import 'package:ktodo_application/components/input-custom.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
-import 'package:ktodo_application/screens/signup-screens.dart';
+import 'package:ktodo_application/screens/screen/signup-screens.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth-provider.dart';
+import '../../providers/auth-provider.dart';
 import 'home-screens.dart';
 
 class LoginScreen extends StatefulWidget {

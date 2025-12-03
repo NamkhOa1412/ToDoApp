@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth-provider.dart';
+import '../../providers/auth-provider.dart';
 import 'home-screens.dart';
 import 'login-screens.dart';
 

@@ -7,9 +7,9 @@ import 'package:ktodo_application/screens/card/board-card.dart';
 import 'package:ktodo_application/screens/task-screen/add-new-task-screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import '../providers/auth-provider.dart';
+import '../../providers/auth-provider.dart';
 import 'login-screens.dart';
-import '../components/custom-drawer.dart';
+import '../../components/custom-drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

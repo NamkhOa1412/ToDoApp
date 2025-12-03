@@ -3,11 +3,11 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/info-user.dart';
 import 'package:ktodo_application/providers/user-provider.dart';
-import 'package:ktodo_application/screens/changepass-screens.dart';
-import 'package:ktodo_application/screens/help.dart';
+import 'package:ktodo_application/screens/screen/changepass-screens.dart';
+import 'package:ktodo_application/screens/screen/help.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth-provider.dart';
-import '../screens/login-screens.dart';
+import '../screens/screen/login-screens.dart';
 
 class AppDrawer extends StatelessWidget {
   final AdvancedDrawerController controller;

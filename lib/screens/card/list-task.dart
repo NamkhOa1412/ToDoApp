@@ -3,7 +3,7 @@ import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/screens/card/board-card.dart';
-import 'package:ktodo_application/screens/task-info.dart';
+import 'package:ktodo_application/screens/screen/task-info.dart';
 import 'package:provider/provider.dart';
 
 class ListTask extends StatelessWidget {

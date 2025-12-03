@@ -4,7 +4,7 @@ import 'package:ktodo_application/providers/card-provider.dart';
 import 'package:ktodo_application/providers/user-provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth-provider.dart';
-import 'screens/splash-screens.dart';
+import 'screens/screen/splash-screens.dart';
 
 void main() {
   runApp(

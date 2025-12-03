@@ -28,6 +28,8 @@ class _CardInfoState extends State<CardInfo> {
 
   Timer? _timer;
   TextEditingController cmtCtrl = TextEditingController();
+  TextEditingController descriptionCtrl = TextEditingController();
+  bool _isDescriptionInitialized = false;
 
   @override
   void initState() {
@@ -40,11 +42,17 @@ class _CardInfoState extends State<CardInfo> {
     _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       context.read<CardProvider>().getCardDetail(widget.card.id);
     });
+
+    descriptionCtrl.addListener(() {
+      context.read<CardProvider>().checkDescriptionChanged(descriptionCtrl.text);
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    descriptionCtrl.dispose();
+    cmtCtrl.dispose();
     super.dispose();
   }
 
@@ -60,6 +68,11 @@ class _CardInfoState extends State<CardInfo> {
           child: CircularProgressIndicator(color: Color(0xFF26A69A)),
         ),
       );
+    }
+
+    if (!_isDescriptionInitialized && (cardDetail.description?.isNotEmpty ?? false)) {
+      descriptionCtrl.text = cardDetail.description!;
+      _isDescriptionInitialized = true;
     }
 
     return Scaffold(
@@ -97,12 +110,30 @@ class _CardInfoState extends State<CardInfo> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Nội dung',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Nội dung',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        cardProvider.isDescriptionChanged ? GestureDetector(
+                          onTap: () async {
+                            await cardProvider.updateDesCard(
+                              widget.card.id.toString(),
+                              descriptionCtrl.text,
+                            );
+                          },
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.green,
+                            size: 32,
+                          ),
+                        ) : SizedBox(),
+                      ],
                     ),
                     const SizedBox(height: 6),
-                    CustomInputField(hintText: 'Thêm nội dung thẻ',maxLines: 8, minLines: 6,),
+                    CustomInputField(hintText: 'Thêm nội dung thẻ',maxLines: 8, minLines: 6, controller: descriptionCtrl,),
                     const SizedBox(height: 16),
                     const Divider(),
 

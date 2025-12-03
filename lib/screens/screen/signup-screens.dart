@@ -3,7 +3,7 @@ import 'package:ktodo_application/components/button-custom.dart';
 import 'package:ktodo_application/components/input-custom.dart';
 import 'package:ktodo_application/providers/user-provider.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth-provider.dart';
+import '../../providers/auth-provider.dart';
 import 'home-screens.dart';
 
 class SignupScreen extends StatefulWidget {
