@@ -51,7 +51,7 @@ class _CheckListUIState extends State<CheckListUI> {
 
                 switch (result) {
                   case 'delete':
-                    ConfirmLogoutDialog.show(context: context, title: 'Xác nhận xóa', message: 'Bạn có chắc chắn muốn xóa danh sách này !', onPressed: () async {
+                    ConfirmLogoutDialog.show(context: context, title: 'Xác nhận xóa', message: 'Bạn có chắc chắn muốn xóa danh sách này!', onPressed: () async {
                       await cardProvider.deleteCheckList(widget.cardId, cl.id.toString(), context);
                     });
                     

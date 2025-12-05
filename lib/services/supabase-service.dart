@@ -622,4 +622,81 @@ class SupabaseAPI {
       throw Exception("18 Không thể lấy thông tin người dùng");
     }
   }
+
+  static Future<bool?> updateTitleCard(String accessToken, String cardId, String title, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/update_card_name');
+    final body = jsonEncode({
+      "p_card_id": cardId,
+      "p_name": title
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode[0]['status'] == true ) {
+        Navigator.pop(context);
+        CustomDialog.show(context: context, title: 'Thành công', message: decode[0]['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("19 Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<bool?> createCard(String accessToken, String listId, String title, String des,BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/create_card');
+    final body = jsonEncode({
+      "p_list_id": listId,
+      "p_title": title,
+      "p_description": des,
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode != null ) {
+        Navigator.pop(context);
+        CustomDialog.show(context: context, title: 'Thành công', message: 'Tạo thành công', type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: 'Tạo thất bại', type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("20 Không thể lấy thông tin người dùng");
+    }
+  }
+
+  static Future<bool?> deleteCard(String accessToken, String cardId, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/delete_card');
+    final body = jsonEncode({
+      "p_card_id": cardId
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode[0]['status'] == true ) {
+        CustomDialog.show(context: context, title: 'Thành công', message: decode[0]['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode[0]['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("21 Không thể lấy thông tin người dùng");
+    }
+  }
 }

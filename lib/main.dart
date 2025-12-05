@@ -13,7 +13,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => BoardProvider()),
-        // ChangeNotifierProvider(create: (_) => CardProvider()),
+        ChangeNotifierProvider(create: (_) => CardProvider()),
       ],
       child: const MyApp(),
     ),

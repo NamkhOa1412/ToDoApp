@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/components/app-menu.dart';
+import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/model/list-board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/providers/card-provider.dart';
@@ -26,6 +28,7 @@ class _BoardColumnState extends State<BoardColumn> {
   @override
   Widget build(BuildContext context) {
     final boardProvider = Provider.of<BoardProvider>(context);
+    final cardProvider = Provider.of<CardProvider>(context);
     final cards = boardProvider.cardsByList[widget.list.id] ?? [];
     return Container(
       width: 220,
@@ -47,13 +50,43 @@ class _BoardColumnState extends State<BoardColumn> {
           const SizedBox(height: 8),
           // TaskCard(title: title)
           for (var card in cards) ...[
-            GestureDetector(onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (_) => CardInfo(card: card,),
-              //   ),
-              // );
+            GestureDetector(
+              onLongPressStart: (details) async {
+                final result = await showAppMenu(
+                  context: context,
+                  position: details.globalPosition,
+                  items: {
+                    'delete': 'Xóa Card',
+                    'update': 'Sửa tiêu đề thẻ',
+                    'move': 'Di chuyển thẻ'
+                  },
+                );
+
+                switch (result) {
+                  case 'delete':
+                    ConfirmLogoutDialog.show(context: context, title: 'Xác nhận xóa', message: 'Bạn có chắc chắn muốn xóa thẻ này!', onPressed: () async {
+                      await cardProvider.deleteCard(card.id.toString(), context) == true ?
+                      boardProvider.loadCard(widget.list.id.toString(), widget.board_id) : null;
+                    });
+                    break;
+
+                  case 'update':
+                    final TextEditingController titleCtrl = TextEditingController();
+                    DialogAdd.show(context: context,Ctrl: titleCtrl, 
+                      onPressed: () async {
+                        final title = titleCtrl.text.trim();
+                        await cardProvider.updateTitleCard(card.id.toString(),title, context) == true ?
+                        boardProvider.loadCard(widget.list.id.toString(), widget.board_id) : null;
+                    }, title: 'Tên thẻ',hintText: 'Nhập tên thẻ');
+                    break;
+
+                  case 'move':
+                    print(card.id.toString());
+                    break;
+                }
+              },
+
+              onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -64,12 +97,22 @@ class _BoardColumnState extends State<BoardColumn> {
                 ),
               );
 
-            } ,child: TaskCard(title: card.title ?? "Không có tiêu đề")),
+            } ,child: TaskCard(title: card.title ?? 'Không có tiêu đề')),
             const SizedBox(height: 6),
           ],
           const SizedBox(height: 6),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              final TextEditingController titleCtrl = TextEditingController();
+              final TextEditingController desCtrl = TextEditingController();
+              DialogAddCard.show(context: context,Ctrl1: titleCtrl, Ctrl2: desCtrl,
+                onPressed: () async {
+                  final title = titleCtrl.text.trim();
+                  final des = desCtrl.text.trim();
+                  await cardProvider.createCard(widget.list.id.toString(),title,des, context) == true ?
+                  boardProvider.loadCard(widget.list.id.toString(), widget.board_id) : null;
+              }, title1: '* Tên thẻ',hintText1: 'Nhập tên thẻ', title2: 'Mô tả', hintText2: 'Nhập mô tả');
+            },
             child: const Text("+ Thêm thẻ",
                 style: TextStyle(color: Colors.black)),
           ),

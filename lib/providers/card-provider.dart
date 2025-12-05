@@ -205,4 +205,40 @@ class CardProvider extends ChangeNotifier {
       print("loi : $e");
     }
   }
+
+  Future<bool?> updateTitleCard(String cardId, String newTitle, BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      final is_success = await SupabaseAPI.updateTitleCard(token!, cardId, newTitle, context);
+      return is_success;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
+
+  Future<bool?> createCard(String listId, String title, String des, BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    try {
+      final is_success = await SupabaseAPI.createCard(token!,listId, title, des, context);
+      return is_success;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
+
+  Future<bool?> deleteCard(String cardId, BuildContext context) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    
+    try {
+      final is_success = await SupabaseAPI.deleteCard(token!, cardId, context);
+      return is_success;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
 }
