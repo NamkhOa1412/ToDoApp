@@ -699,4 +699,29 @@ class SupabaseAPI {
       throw Exception("21 Không thể lấy thông tin người dùng");
     }
   }
+
+  static Future<bool?> moveCard(String accessToken, String cardId, String newListId, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/move_card');
+    final body = jsonEncode({
+      "p_card_id": cardId,
+      "p_new_list_id" : newListId
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode['status'] == true ) {
+        CustomDialog.show(context: context, title: 'Thành công', message: decode['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("22 Không thể lấy thông tin người dùng");
+    }
+  }
 }

@@ -241,4 +241,16 @@ class CardProvider extends ChangeNotifier {
       print("loi : $e");
     }
   }
+
+  Future<bool?> moveCard(String cardId, String newListId, BuildContext context) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    
+    try {
+      final is_success = await SupabaseAPI.moveCard(token!, cardId, newListId, context);
+      return is_success;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
 }

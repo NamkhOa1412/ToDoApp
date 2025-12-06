@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/app-menu.dart';
 import 'package:ktodo_application/components/dialog-custom.dart';
+import 'package:ktodo_application/components/list-select.dart';
 import 'package:ktodo_application/model/list-board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/providers/card-provider.dart';
@@ -18,11 +21,28 @@ class BoardColumn extends StatefulWidget {
 }
 
 class _BoardColumnState extends State<BoardColumn> {
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
     final boardProvider = Provider.of<BoardProvider>(context, listen: false);
     boardProvider.loadCard(widget.list.id.toString(), widget.board_id);
+
+    Future.microtask(() {
+      context.read<BoardProvider>().loadCard(widget.list.id.toString(), widget.board_id);
+    });
+
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      context.read<BoardProvider>().loadCard(widget.list.id.toString(), widget.board_id);
+    });
+
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -30,6 +50,7 @@ class _BoardColumnState extends State<BoardColumn> {
     final boardProvider = Provider.of<BoardProvider>(context);
     final cardProvider = Provider.of<CardProvider>(context);
     final cards = boardProvider.cardsByList[widget.list.id] ?? [];
+    final listBoard = context.watch<BoardProvider>().listBorad;
     return Container(
       width: 220,
       margin: const EdgeInsets.only(right: 12),
@@ -81,8 +102,25 @@ class _BoardColumnState extends State<BoardColumn> {
                     break;
 
                   case 'move':
-                    print(card.id.toString());
-                    break;
+                      if (!mounted) return;
+                      showModalBottomSheet(
+                        context: context,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+                        ),
+                        builder: (context) {
+                          return ListSelectSheet(
+                            list: listBoard ?? [],
+                            onSelect: (l) async {
+                              if ( await cardProvider.moveCard(card.id.toString(),l.id.toString(), context) == true ) {
+                                boardProvider.loadCard(widget.list.id.toString(), widget.board_id);
+                                boardProvider.loadCard(l.id.toString(), widget.board_id);
+                              };
+                            },
+                          );
+                        },
+                      );
+                  break;
                 }
               },
 
