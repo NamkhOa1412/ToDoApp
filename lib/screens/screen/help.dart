@@ -69,28 +69,28 @@ class HelpScreens extends StatelessWidget {
                         ),
                       ),
 
-                      const SizedBox(height: 30),
+                      // const SizedBox(height: 30),
 
-                      const Text(
-                        "Website",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
+                      // const Text(
+                      //   "Website",
+                      //   style: TextStyle(
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 16,
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 10),
 
-                      InkWell(
-                        onTap: () {},
-                        child: const Text(
-                          "https://yourwebsite.com/support",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
+                      // InkWell(
+                      //   onTap: () {},
+                      //   child: const Text(
+                      //     "https://yourwebsite.com/support",
+                      //     style: TextStyle(
+                      //       fontSize: 16,
+                      //       color: Colors.blue,
+                      //       decoration: TextDecoration.underline,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

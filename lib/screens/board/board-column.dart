@@ -111,6 +111,7 @@ class _BoardColumnState extends State<BoardColumn> {
                         builder: (context) {
                           return ListSelectSheet(
                             list: listBoard ?? [],
+                            title: 'Chọn danh sách cần chuyển đến',
                             onSelect: (l) async {
                               if ( await cardProvider.moveCard(card.id.toString(),l.id.toString(), context) == true ) {
                                 boardProvider.loadCard(widget.list.id.toString(), widget.board_id);

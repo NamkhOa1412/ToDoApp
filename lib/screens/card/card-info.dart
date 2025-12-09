@@ -139,6 +139,60 @@ class _CardInfoState extends State<CardInfo> {
 
                     const SizedBox(height: 16),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Thời gian',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    // const SizedBox(height: 6),
+                    // InkWell(
+                    //   onTap: () {
+                    //     print("Tapped!");
+                    //   },
+                    //   child: Container(
+                    //     color: Color(0xFF26A69A),
+                    //     padding: EdgeInsets.all(8),
+                    //     child: Row(
+                    //       children: [
+                    //         Icon(Icons.timer),
+                    //         const SizedBox(width: 6),
+                    //         const Text(
+                    //           'Thời gian bắt đầu',
+                    //           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    const SizedBox(height: 6),
+                    InkWell(
+                      onTap: () {
+                        print("Tapped!");
+                      },
+                      child: Container(
+                        color: Color(0xFF26A69A),
+                        padding: EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            Icon(Icons.timer),
+                            const SizedBox(width: 6),
+                            const Text(
+                              'Thời gian kết thúc',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+                    const Divider(),
+
+                    const SizedBox(height: 16),
+                    Row(
                       children: [
                         Expanded(
                           flex: 8,

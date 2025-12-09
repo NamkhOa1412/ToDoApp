@@ -4,11 +4,13 @@ import 'package:ktodo_application/model/list-board.dart';
 
 class ListSelectSheet extends StatelessWidget {
   final List<ListBoard> list;
+  final String title;
   final Function(ListBoard) onSelect;
 
   const ListSelectSheet({
     super.key,
     required this.list,
+    required this.title,
     required this.onSelect,
   });
 
@@ -20,8 +22,9 @@ class ListSelectSheet extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Chọn danh sách cần chuyển đến",
+          Text(
+            // "Chọn danh sách cần chuyển đến",
+            title,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           const SizedBox(height: 12),

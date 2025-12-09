@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ktodo_application/components/app-menu.dart';
 import 'package:ktodo_application/components/dialog-custom.dart';
+import 'package:ktodo_application/components/list-select.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
 import 'package:ktodo_application/screens/board/board-content.dart';
@@ -19,6 +21,7 @@ class _TaskInfoState extends State<TaskInfo> {
   @override
   Widget build(BuildContext context) {
     final boardProvider = Provider.of<BoardProvider>(context);
+    final listBoard = context.watch<BoardProvider>().listBorad;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -61,61 +64,61 @@ class _TaskInfoState extends State<TaskInfo> {
                           ),
                           Expanded(
                             flex: 1,
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: IconButton(
-                                key: menuKey,
-                                icon: const Icon(Icons.more_horiz_rounded, color: Colors.black),
-                                onPressed: () async {
-                                  // Lấy vị trí của nút
-                                  final RenderBox button =
-                                      menuKey.currentContext!.findRenderObject() as RenderBox;
-                                  final RenderBox overlay =
-                                      Overlay.of(context).context.findRenderObject() as RenderBox;
-                                  final Offset position = button.localToGlobal(Offset.zero, ancestor: overlay);
-
-                                  // Hiện popup menu tại vị trí của nút
-                                  final selected = await showMenu<String>(
-                                    context: context,
-                                    position: RelativeRect.fromLTRB(
-                                      position.dx,
-                                      position.dy + button.size.height,
-                                      position.dx + button.size.width,
-                                      0,
-                                    ),
-                                    items: [
-                                      const PopupMenuItem(
-                                        value: 'add_board',
-                                        child: Text('Thêm bảng'),
-                                      ),
-                                      const PopupMenuItem(
-                                        value: 'menu_board',
-                                        child: Text('Menu Board'),
-                                      ),
-                                    ],
-                                  );
-
-                                  if (selected == 'add_board') {
-                                    print(widget.boards.id.toString());
-                                    final TextEditingController titleCtrl = TextEditingController();
-                                    DialogAdd.show(context: context,Ctrl: titleCtrl, onPressed: () async {
-                                      final title = titleCtrl.text.trim();
-                                      await boardProvider.addListBoard(widget.boards.id.toString(), title, context);
-                                    }, title: 'Tiêu đề',hintText: 'Nhập tiêu đề');
-                                  } else if (selected == 'menu_board') {
-                                    await boardProvider.getInfoBoard(widget.boards.id.toString());
-                                    if (!mounted) return;
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => MenuBoard(board: widget.boards),
-                                      ),
-                                    );
-                                  }
+                            child: GestureDetector(
+                              onTapDown: (details) async {
+                              final result = await showAppMenu(
+                                context: context,
+                                position: details.globalPosition,
+                                items: {
+                                  'add_board': 'Thêm bảng',
+                                  'delete_board': 'Xóa bảng',
+                                  'menu_board': 'Menu',
                                 },
-                              ),
+                              );
+
+                              switch (result) {
+                                case 'add_board':
+                                  final TextEditingController titleCtrl = TextEditingController();
+                                  DialogAdd.show(context: context,Ctrl: titleCtrl, onPressed: () async {
+                                    final title = titleCtrl.text.trim();
+                                    await boardProvider.addListBoard(widget.boards.id.toString(), title, context);
+                                  }, title: 'Tiêu đề',hintText: 'Nhập tiêu đề');
+                                break;
+
+                                case 'delete_board':
+                                  if (!mounted) return;
+                                    showModalBottomSheet(
+                                      context: context,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+                                      ),
+                                      builder: (context) {
+                                        return ListSelectSheet(
+                                          title: 'Chọn danh sách cần xóa',
+                                          list: listBoard ?? [],
+                                          onSelect: (l) async {
+                                            print(l.id);
+                                          },
+                                        );
+                                      },
+                                    );
+                                break;
+
+                                case 'menu_board':
+                                  await boardProvider.getInfoBoard(widget.boards.id.toString());
+                                  if (!mounted) return;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => MenuBoard(board: widget.boards),
+                                    ),
+                                  );
+                                break;
+                              }
+},
+                              child: Icon(Icons.more_horiz_rounded)
                             ),
-                          ),
+                          )
                         ],
                       ),
                       Column(
