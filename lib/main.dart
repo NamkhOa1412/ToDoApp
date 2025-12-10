@@ -29,7 +29,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'KToDo',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF26A69A)),
+        useMaterial3: true,
+      ),
       home: const SplashScreen(),
     );
   }
