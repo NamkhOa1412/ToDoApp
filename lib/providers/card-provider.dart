@@ -253,4 +253,16 @@ class CardProvider extends ChangeNotifier {
       print("loi : $e");
     }
   }
+
+  Future<bool?> deleteList(String listId, BuildContext context) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    
+    try {
+      final is_success = await SupabaseAPI.deleteList(token!, listId, context);
+      return is_success;
+    } catch (e) {
+      print("loi : $e");
+    }
+  }
 }

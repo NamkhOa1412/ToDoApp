@@ -4,6 +4,7 @@ import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/components/list-select.dart';
 import 'package:ktodo_application/model/board.dart';
 import 'package:ktodo_application/providers/board-provider.dart';
+import 'package:ktodo_application/providers/card-provider.dart';
 import 'package:ktodo_application/screens/board/board-content.dart';
 import 'package:ktodo_application/screens/card/menu-board.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ class _TaskInfoState extends State<TaskInfo> {
   @override
   Widget build(BuildContext context) {
     final boardProvider = Provider.of<BoardProvider>(context);
+    final cardProvider = Provider.of<CardProvider>(context);
     final listBoard = context.watch<BoardProvider>().listBorad;
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -97,7 +99,11 @@ class _TaskInfoState extends State<TaskInfo> {
                                           title: 'Chọn danh sách cần xóa',
                                           list: listBoard ?? [],
                                           onSelect: (l) async {
-                                            print(l.id);
+                                            ConfirmLogoutDialog.show(context: context, title: 'Xác nhận xóa', message: 'Bạn có chắc chắn muốn xóa bảng "${l.title.toString()}" này không!', onPressed: () async {
+                                              if ( await cardProvider.deleteList(l.id.toString(), context) == true ) {
+                                                boardProvider.getListbyBoardid(widget.boards.id.toString());
+                                              };
+                                            });
                                           },
                                         );
                                       },
