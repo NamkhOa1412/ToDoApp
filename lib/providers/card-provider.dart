@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CardProvider extends ChangeNotifier {
   CardDetail? _cardDetail;
+  bool _isAddTimer = false;
   Map<String, bool> isAdding = {};
   Map<String, TextEditingController> controllers = {};
   Map<String, bool> expandedStatus = {};
@@ -13,7 +14,11 @@ class CardProvider extends ChangeNotifier {
   bool _isDescriptionChanged = false;
 
   CardDetail? get cardDetail => _cardDetail;
+  bool get isAddTimer => _isAddTimer;
   bool get isDescriptionChanged => _isDescriptionChanged;
+
+  DateTime? deadlineDate;
+  TimeOfDay? deadlineTime;
 
   Future<void> getCardDetail(String card_id) async {
     final prefs = await SharedPreferences.getInstance();
@@ -264,5 +269,39 @@ class CardProvider extends ChangeNotifier {
     } catch (e) {
       print("loi : $e");
     }
+  }
+
+  void toggleisAddTimer() {
+    _isAddTimer = !_isAddTimer;
+    notifyListeners();
+  }
+
+  void setDeadlineDate(DateTime date) {
+    deadlineDate = date;
+    notifyListeners();
+  }
+
+  void setDeadlineTime(TimeOfDay time) {
+    deadlineTime = time;
+    notifyListeners();
+  }
+
+  void clearDeadline() {
+    deadlineDate = null;
+    deadlineTime = null;
+    notifyListeners();
+  }
+
+  /// Gộp Date + Time → DateTime
+  DateTime? get deadlineDateTime {
+    if (deadlineDate == null || deadlineTime == null) return null;
+
+    return DateTime(
+      deadlineDate!.year,
+      deadlineDate!.month,
+      deadlineDate!.day,
+      deadlineTime!.hour,
+      deadlineTime!.minute,
+    );
   }
 }

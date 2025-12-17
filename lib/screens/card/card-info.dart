@@ -6,6 +6,7 @@ import 'package:ktodo_application/components/comment.dart';
 import 'package:ktodo_application/components/dialog-custom.dart';
 import 'package:ktodo_application/components/input-custom.dart';
 import 'package:ktodo_application/components/member-select.dart';
+import 'package:ktodo_application/components/timer-task.dart';
 import 'package:ktodo_application/model/card.dart';
 import 'package:ktodo_application/providers/card-provider.dart';
 import 'package:provider/provider.dart';
@@ -147,41 +148,32 @@ class _CardInfoState extends State<CardInfo> {
                         ),
                       ],
                     ),
-                    // const SizedBox(height: 6),
-                    // InkWell(
-                    //   onTap: () {
-                    //     print("Tapped!");
-                    //   },
-                    //   child: Container(
-                    //     color: Color(0xFF26A69A),
-                    //     padding: EdgeInsets.all(8),
-                    //     child: Row(
-                    //       children: [
-                    //         Icon(Icons.timer),
-                    //         const SizedBox(width: 6),
-                    //         const Text(
-                    //           'Thời gian bắt đầu',
-                    //           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
                     const SizedBox(height: 6),
                     InkWell(
                       onTap: () {
-                        print("Tapped!");
+                        if (!mounted) return;
+                          showModalBottomSheet(
+                            context: context,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+                            ),
+                            builder: (context) {
+                              return TimerTask(
+                                
+                              );
+                            },
+                          );
                       },
                       child: Container(
                         color: Color(0xFF26A69A),
                         padding: EdgeInsets.all(8),
                         child: Row(
                           children: [
-                            Icon(Icons.timer),
+                            Icon(Icons.timer, color: Colors.white,),
                             const SizedBox(width: 6),
                             const Text(
                               'Thời gian kết thúc',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
