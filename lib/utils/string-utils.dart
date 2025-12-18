@@ -17,4 +17,13 @@ class StringUtils {
           "${date.hour.toString().padLeft(2,'0')}:"
           "${date.minute.toString().padLeft(2,'0')}";
   }
+
+  static String formatTimer(String isoString) {
+    final date = DateTime.parse(isoString); // chuyển về giờ VN
+    return "${date.day.toString().padLeft(2,'0')}/"
+          "${date.month.toString().padLeft(2,'0')}/"
+          "${date.year} "
+          "${date.hour.toString().padLeft(2,'0')}:"
+          "${date.minute.toString().padLeft(2,'0')}";
+  }
 }

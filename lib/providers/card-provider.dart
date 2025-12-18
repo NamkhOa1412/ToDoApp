@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ktodo_application/model/board-users.dart';
 import 'package:ktodo_application/model/card-detail.dart';
 import 'package:ktodo_application/services/supabase-service.dart';
+import 'package:ktodo_application/utils/string-utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CardProvider extends ChangeNotifier {
@@ -289,10 +290,15 @@ class CardProvider extends ChangeNotifier {
   void clearDeadline() {
     deadlineDate = null;
     deadlineTime = null;
+    _isAddTimer = false;
     notifyListeners();
   }
 
-  /// Gộp Date + Time → DateTime
+  void setIsAddTimer(bool value) {
+    _isAddTimer = value;
+    notifyListeners();
+  }
+
   DateTime? get deadlineDateTime {
     if (deadlineDate == null || deadlineTime == null) return null;
 
@@ -303,5 +309,20 @@ class CardProvider extends ChangeNotifier {
       deadlineTime!.hour,
       deadlineTime!.minute,
     );
+  }
+
+  Future<void> updateCardDueAt(String cardId, String? due_at, BuildContext context) async { 
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    try {
+      final is_success = await SupabaseAPI.updateCardDueAt(token!, cardId, due_at, context);
+      if(is_success == true ){
+        clearDeadline();
+        getCardDetail(cardId);
+        notifyListeners();
+      }else{ null;}
+    } catch (e) {
+      print("loi : $e");
+    }
   }
 }

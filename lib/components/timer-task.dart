@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ktodo_application/components/button-custom.dart';
 import 'package:ktodo_application/providers/card-provider.dart';
+import 'package:ktodo_application/utils/string-utils.dart';
 import 'package:provider/provider.dart';
 
 class TimerTask extends StatefulWidget {
-  const TimerTask({super.key});
+  final String cardId;
+  final String dueAt;
+  TimerTask({super.key,required this.cardId ,required this.dueAt});
 
   @override
   State<TimerTask> createState() => _TimerTaskState();
@@ -40,11 +43,35 @@ class _TimerTaskState extends State<TimerTask> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    print(widget.dueAt);
+    if (widget.dueAt != null && widget.dueAt != '') {
+      final dateTime =
+          DateTime.parse(widget.dueAt!).toLocal();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final cardProvider = context.read<CardProvider>();
+
+        cardProvider.setDeadlineDate(
+          DateTime(dateTime.year, dateTime.month, dateTime.day),
+        );
+
+        cardProvider.setDeadlineTime(
+          TimeOfDay(hour: dateTime.hour, minute: dateTime.minute),
+        );
+
+        cardProvider.setIsAddTimer(true);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cardProvider = context.watch<CardProvider>();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding:  EdgeInsets.all(16),
       height: cardProvider.isAddTimer ? 250 : 200,
       width: MediaQuery.of(context).size.width,
       child: Column(
@@ -56,19 +83,19 @@ class _TimerTaskState extends State<TimerTask> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                 Text(
                   "Ngày hết hạn",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-                const SizedBox(height: 12),
+                 SizedBox(height: 12),
                 if (!cardProvider.isAddTimer)
                   Row(
                     children: [
-                      const Icon(Icons.timer_outlined),
-                      const SizedBox(width: 6),
+                       Icon(Icons.timer_outlined),
+                       SizedBox(width: 6),
                       GestureDetector(
                         onTap: cardProvider.toggleisAddTimer,
-                        child: const Text(
+                        child:  Text(
                           "Thêm ngày hết hạn ....",
                           style: TextStyle(fontSize: 18),
                         ),
@@ -110,7 +137,7 @@ class _TimerTaskState extends State<TimerTask> {
                       SizedBox(height: 12),
                       CustomButton(
                         text: 'Hủy thêm ngày',
-                        onPressed: cardProvider.toggleisAddTimer,
+                        onPressed: cardProvider.clearDeadline,
                       ),
                     ],
                   ),
@@ -133,7 +160,10 @@ class _TimerTaskState extends State<TimerTask> {
                       ),
                       elevation: 0,
                     ),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      cardProvider.clearDeadline();
+                      Navigator.pop(context);
+                    },
                     child: Text(
                       'Hủy',
                       style: TextStyle(color: Colors.white),
@@ -151,7 +181,8 @@ class _TimerTaskState extends State<TimerTask> {
                       ),
                       elevation: 0,
                     ),
-                    onPressed: () {
+                    onPressed: () async{
+                      await cardProvider.updateCardDueAt(widget.cardId, cardProvider.deadlineDateTime?.toUtc().toIso8601String(), context);
                     },
                     child: Text(
                       'Hoàn tất',

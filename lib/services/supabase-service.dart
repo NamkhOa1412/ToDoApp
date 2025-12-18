@@ -749,4 +749,31 @@ class SupabaseAPI {
       throw Exception("23 Không thể lấy thông tin người dùng");
     }
   }
+
+  static Future<bool?> updateCardDueAt(String accessToken, String cardId, dynamic due_at, BuildContext context) async {
+    final url = Uri.parse('$baseUrl/rest/v1/rpc/update_card_due_at');
+    final body = jsonEncode({
+      "p_card_id": cardId,
+      "p_due_at" : due_at
+    });
+    final response = await http.post(url, headers: {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    }, body: body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final decode = jsonDecode(response.body);
+      if ( decode['status'] == true ) {
+        Navigator.pop(context);
+        CustomDialog.show(context: context, title: 'Thành công', message: decode['msg'], type: DialogType.success);
+        return true;
+      }
+      else {
+        CustomDialog.show(context: context, title: 'Thất bại', message: decode['msg'], type: DialogType.error);
+        return false;
+      }
+    } else {
+      throw Exception("24 Không thể lấy thông tin người dùng");
+    }
+  }
 }

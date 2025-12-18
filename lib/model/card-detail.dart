@@ -2,7 +2,7 @@ class CardDetail {
   String? id;
   String? title;
   String? description;
-  dynamic? dueAt;
+  String? dueAt;
   String? createdAt;
   String? updatedAt;
   String? boardId;

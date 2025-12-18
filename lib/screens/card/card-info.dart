@@ -9,11 +9,12 @@ import 'package:ktodo_application/components/member-select.dart';
 import 'package:ktodo_application/components/timer-task.dart';
 import 'package:ktodo_application/model/card.dart';
 import 'package:ktodo_application/providers/card-provider.dart';
+import 'package:ktodo_application/utils/string-utils.dart';
 import 'package:provider/provider.dart';
 
 class CardInfo extends StatefulWidget {
   final CardModel card;
-  const CardInfo({super.key, required this.card});
+   CardInfo({super.key, required this.card});
 
   @override
   State<CardInfo> createState() => _CardInfoState();
@@ -40,7 +41,7 @@ class _CardInfoState extends State<CardInfo> {
       context.read<CardProvider>().getCardDetail(widget.card.id);
     });
 
-    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    _timer = Timer.periodic( Duration(seconds: 10), (timer) {
       context.read<CardProvider>().getCardDetail(widget.card.id);
     });
 
@@ -64,7 +65,7 @@ class _CardInfoState extends State<CardInfo> {
     final cardProvider = Provider.of<CardProvider>(context);
 
     if (cardDetail == null) {
-      return const Scaffold(
+      return  Scaffold(
         body: Center(
           child: CircularProgressIndicator(color: Color(0xFF26A69A)),
         ),
@@ -82,14 +83,14 @@ class _CardInfoState extends State<CardInfo> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
+              padding:  EdgeInsets.symmetric(horizontal: 24, vertical: 5),
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.black),
+                    icon:  Icon(Icons.close, color: Colors.black),
                     onPressed: () => Navigator.pop(context),
                   ),
-                  const SizedBox(width: 8),
+                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       cardDetail!.title.toString(),
@@ -107,14 +108,14 @@ class _CardInfoState extends State<CardInfo> {
 
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding:  EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                         Text(
                           'Nội dung',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
@@ -133,22 +134,22 @@ class _CardInfoState extends State<CardInfo> {
                         ) : SizedBox(),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                     SizedBox(height: 6),
                     CustomInputField(hintText: 'Thêm nội dung thẻ',maxLines: 8, minLines: 6, controller: descriptionCtrl,),
-                    const SizedBox(height: 16),
-                    const Divider(),
+                     SizedBox(height: 16),
+                     Divider(),
 
-                    const SizedBox(height: 16),
+                     SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                         Text(
                           'Thời gian',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                     SizedBox(height: 6),
                     InkWell(
                       onTap: () {
                         if (!mounted) return;
@@ -158,9 +159,7 @@ class _CardInfoState extends State<CardInfo> {
                               borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
                             ),
                             builder: (context) {
-                              return TimerTask(
-                                
-                              );
+                              return TimerTask(cardId: cardDetail.id.toString(),  dueAt: cardDetail.dueAt.toString(),);
                             },
                           );
                       },
@@ -170,9 +169,9 @@ class _CardInfoState extends State<CardInfo> {
                         child: Row(
                           children: [
                             Icon(Icons.timer, color: Colors.white,),
-                            const SizedBox(width: 6),
-                            const Text(
-                              'Thời gian kết thúc',
+                            SizedBox(width: 6),
+                            Text(
+                              cardDetail.dueAt == null || cardDetail.dueAt == '' ? 'Thời gian kết thúc' : StringUtils.formatDate(cardDetail.dueAt.toString()),
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
                             ),
                           ],
@@ -180,10 +179,10 @@ class _CardInfoState extends State<CardInfo> {
                       ),
                     ),
 
-                    const SizedBox(height: 16),
-                    const Divider(),
+                     SizedBox(height: 16),
+                     Divider(),
 
-                    const SizedBox(height: 16),
+                     SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
@@ -219,23 +218,23 @@ class _CardInfoState extends State<CardInfo> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                     SizedBox(height: 6),
                     cardDetail.members != null && cardDetail.members!.isNotEmpty ? Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(8),
+                      padding:  EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: Color(0xFF26A69A),
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: ListView.builder(
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                        physics:  NeverScrollableScrollPhysics(),
                         itemCount: cardDetail.members!.length,
                         itemBuilder: (context, index) {
                           final fullname_list = cardDetail.members![index].fullName;
                           final username_list = "@${cardDetail.members![index].username}";
                           return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            padding:  EdgeInsets.symmetric(vertical: 4),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -257,10 +256,10 @@ class _CardInfoState extends State<CardInfo> {
                         },
                       ),
                     ) : SizedBox(),
-                    const SizedBox(height: 16),
-                    const Divider(),
+                     SizedBox(height: 16),
+                     Divider(),
 
-                    const SizedBox(height: 16),
+                     SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
@@ -286,18 +285,18 @@ class _CardInfoState extends State<CardInfo> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                     SizedBox(height: 6),
                     CheckListUI(checklists: cardDetail.checklists!, cardId: cardDetail.id.toString(),),
 
-                    const SizedBox(height: 16),
-                    const Divider(),
+                     SizedBox(height: 16),
+                     Divider(),
 
-                    const SizedBox(height: 16),
-                    const Text(
+                     SizedBox(height: 16),
+                     Text(
                       'Hoạt động',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                    const SizedBox(height: 6),
+                     SizedBox(height: 6),
                     CommentUI(comment: cardDetail.comments!)
                   ],
                 ),
@@ -308,15 +307,15 @@ class _CardInfoState extends State<CardInfo> {
             SafeArea(
               top: false,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:  EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [
                     Expanded(
                       child: CustomInputField(hintText: 'Thêm nhận xét', controller: cmtCtrl,),
                     ),
-                    const SizedBox(width: 8),
+                     SizedBox(width: 8),
                     IconButton(
-                      icon: const Icon(Icons.send, color: Color(0xFF26A69A)),
+                      icon:  Icon(Icons.send, color: Color(0xFF26A69A)),
                       onPressed: () async {
                         if (cmtCtrl.text.isNotEmpty) {
                           final is_true = await cardProvider.addComment(cardDetail.id.toString(), cmtCtrl.text);
